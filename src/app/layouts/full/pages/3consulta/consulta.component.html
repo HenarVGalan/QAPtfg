@@ -1,0 +1,141 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+    <mat-card class="mat-card mat-focus-indicator">
+      <mat-card-header class="mat-card-header bg-inverse text-white">
+        <div class="mat-card-header-text">
+          <mat-card-title class="mat-card-title">Últimas consultas</mat-card-title>
+          <mat-card-subtitle class="mat-card-subtitle"></mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="mat-card-content">
+
+        <div class="d-flex no-blcok">
+          <div class="m-r-20">
+            <img class="img-circle" width="50" src="assets/images/users/1.jpg" alt="Image">
+          </div>
+          <div class="p-b-20 b-b m-b-30">
+            <h4 class="m-0">Consulta PM10
+              <small class="text-muted">(5 minute ago)</small>
+            </h4>
+            <p class="text-muted">Datos ya disponibles</p>
+            <div fxLayout="row wrap">
+              <div fxFlex.gt-sm="20" fxFlex="100">
+                <img class="img-responsive rounded" src="assets/images/big/icono_grafica.PNG" alt="Image">
+              </div>
+            </div>
+            <button mat-raised-button (click)="openDialog()">Ver resultados</button>
+          </div>
+        </div>
+
+
+        <div class="d-flex no-blcok">
+          <div class="m-r-20">
+            <img class="img-circle" width="50" src="assets/images/users/3.jpg" alt="Image"> </div>
+          <div class="p-b-20 b-b m-b-30">
+            <h4 class="m-0">Consulta PM2.5
+              <small class="text-muted">(1 day ago)</small>
+            </h4>
+            <p class="text-muted">Datos no disponibles</p>
+            <div fxLayout="row wrap">
+              <div fxFlex.gt-sm="20" fxFlex="100">
+                <mat-progress-bar mode="indeterminate" value="40"></mat-progress-bar>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+
+<!-- ****** -->
+
+<div fxLayout="row" fxLayoutWrap="wrap">
+  <!-- Card column -->
+  <div fxFlex.gt-sm="100%" fxFlex="100">
+
+    <mat-card class="mat-card mat-focus-indicator">
+      <mat-card-header class="mat-card-header bg-inverse text-white">
+        <div class="mat-card-header-text">
+          <mat-card-title class="mat-card-title">Crear una consulta</mat-card-title>
+          <mat-card-subtitle class="mat-card-subtitle"></mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content class="mat-card-content">
+
+        <mat-vertical-stepper [linear]="isLinearvarient" #steppervarient class="m-t-20">
+          <mat-step >
+            <form >
+              <ng-template matStepLabel>Elige Contaminante</ng-template>
+              <mat-form-field>
+                <mat-label>Pulsa para seleccionar el contaminante</mat-label>
+                <mat-select class="example-select">
+                  <mat-option value="before">PM10</mat-option>
+                  <mat-option value="after">PM2.5</mat-option>
+                  <mat-option value="above">NO2</mat-option>
+                  <mat-option value="below">O3</mat-option>
+                  <mat-option value="left">CO</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="button-row">
+                <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+                <button mat-raised-button color="accent" matStepperNext>Next</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step>
+            <form >
+              <ng-template matStepLabel>Elige organización</ng-template>
+              <mat-form-field>
+                <mat-label>Pulsa para seleccionar la organización</mat-label>
+                <mat-select class="example-select" >
+                  <mat-option value="before">EEA</mat-option>
+                  <mat-option value="after">WHO</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div class="button-row">
+                <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+                <button mat-raised-button color="accent" matStepperNext >Next</button>
+              </div>
+            </form>
+          </mat-step>
+
+
+
+          <mat-step >
+            <form >
+              <ng-template matStepLabel>Horario</ng-template>
+              <mat-form-field>
+               
+                <mat-label>Pulsa para seleccionar el tipo de ventana</mat-label>
+                <mat-select class="example-select">
+                  <mat-option value="before">Batch Diario</mat-option>
+                  <mat-option value="after">Bath Horario</mat-option>
+                  <mat-option value="above">Bath Anual</mat-option>
+                  <mat-option value="below">Sliding 8 horas</mat-option>
+                </mat-select>
+                <!-- <input matInput placeholder="Hora Inicio, Hora Fin" formControlName="firstCtrl" required> -->
+              </mat-form-field>
+              <div class="button-row">
+                <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+                <button mat-raised-button color="accent" matStepperNext>Next</button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>Done</ng-template>
+            You are now done.
+            <div class="button-row">
+              <button mat-raised-button color="primary" matStepperPrevious>Back</button>
+              <button mat-raised-button color="warn" (click)="steppervarient.reset()">Reset</button>
+              <button mat-raised-button color="accent">Finalizar</button>
+            </div>
+          </mat-step>
+        </mat-vertical-stepper>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

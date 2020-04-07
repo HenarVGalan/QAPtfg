@@ -1,0 +1,25 @@
+.example-headers-align .mat-expansion-panel-header-title, 
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* flex: 0 0 100px !important;
+display: inline-flex;
+    min-width: 100%; 
+    
+    */
+
+
+.mat-row:nth-child(even){
+  background-color:rgba(245, 245, 245, 0.637);
+  }
+
+.mat-row:nth-child(odd){
+  background-color:white;
+  }
+
