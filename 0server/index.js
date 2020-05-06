@@ -1,5 +1,5 @@
 const express = require('express');
-//const cors = require('cors');
+const cors = require('cors');
 const app = express();
 
 const { mongoose } = require('./database');
@@ -10,7 +10,7 @@ const { mongoose } = require('./database');
 app.set('port', process.env.PORT || 3000);
 
 // Middlewares
-// app.use(cors({origin: 'http://localhost:4200'}));
+app.use(cors({origin: 'http://localhost:4200'}));
 app.use(express.json());
 
 // Routes

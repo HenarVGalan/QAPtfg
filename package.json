@@ -11,6 +11,7 @@
     "braces": "^3.0.2",
     "clone-response": "^1.0.2",
     "content-disposition": "^0.5.3",
+    "cors": "^2.8.5",
     "debug": "^2.6.9",
     "decompress-response": "^3.3.0",
     "dot-prop": "^5.2.0",

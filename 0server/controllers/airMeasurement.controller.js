@@ -1,8 +1,6 @@
 const AirM = require('../models/airMeasurementModel');
 
 const airMCtrl = {};
-
-
 /* routes */
 /* 
 router.get('/', airM.getAirMeasurement);
