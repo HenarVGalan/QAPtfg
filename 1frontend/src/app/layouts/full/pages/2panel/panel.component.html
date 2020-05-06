@@ -1,0 +1,47 @@
+<!-- <script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+ -->
+<div fxLayout="row wrap">
+    <!-- Primera columna  -->
+    <div fxFlex.gt-lg="20" fxFlex.gt-md="20" fxFlex.gt-xs="100" fxFlex="100" fxFlexAlign="center"
+        *ngFor="let tile of tiles">
+        <mat-card matRipple :hover class="mat-card-graphis " [style.background]=tile.color style="text-align: center">
+            <mat-card-content class="last-child">
+                <div>
+                    <mat-card-title class="text-center">{{tile.text}}</mat-card-title>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div class="basic-container">
+        <!-- <mat-card (click)="onCardClick($event)" matRipple class="clickable" >A simple mat card</mat-card> -->
+
+    </div>
+
+    <!--     <button mat-button routerLink="">Animal index</button>
+    <button mat-raised-button color="warn">Warn</button>
+    <button mat-raised-button disabled>Disabled</button>
+    <a mat-raised-button routerLink=".">Link</a>
+    <li><a href="  ">PM10</a></li>
+    <button mat-button (click)="scroll(target)">Click to scroll</button>
+    <mat-card matRipple (click)="scroll(target)">
+        <mat-card-content>
+            <div>
+                <mat-card-title class="text-center">Pru</mat-card-title>
+            </div>
+        </mat-card-content>
+    </mat-card> -->
+
+</div>
+
+<div fxLayout="row wrap">
+    <div #target>Your target</div>
+</div>
+
+
+<app-pm10></app-pm10>
+
+<app-air-measurement></app-air-measurement>

@@ -1,0 +1,74 @@
+<!-- ============================================================== -->
+<!-- sidebar -->
+<!-- ============================================================== -->
+<!--<div class="user-profile" style="background: url(assets/images/background/user-info.jpg) no-repeat;">
+    <!-- User profile image -->
+<!-- <div class="profile-img"> <img src="assets/images/users/profile.png" alt="user"> 
+       
+    </div>
+    <!-- User profile text-->
+
+<!-- ============================================================== -->
+<!-- Profile - style you can find in header.scss -->
+<!-- ============================================================== -->
+
+<!--</div>-->
+
+<mat-nav-list appAccordion>
+    <mat-list-item appAccordionLink *ngFor="let menuitem of menuItems.getMenuitem()" routerLinkActive="selected"
+        group="{{menuitem.state}}">
+        <a class="" appAccordionToggle [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'">
+            <mat-icon>{{ menuitem.icon }}</mat-icon>
+            <span>{{ menuitem.name }}</span>
+            <span fxFlex></span>
+            <span class="label label-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+        </a>
+    </mat-list-item>
+</mat-nav-list>
+<!-- 
+<mat-toolbar id="mainToolbar" color="primary">
+    <mat-icon (click)="onToolbarMenuToggle()" id="toolbarMenu">subject</mat-icon>
+    My Awesome App
+    <span class="toolbar-spacer"></span>
+    <mat-icon class="toolbar-icon" matBadge="8" matBadgePosition="after" matBadgeColor="accent">notifications</mat-icon>
+</mat-toolbar> -->
+
+<!-- <mat-sidenav-container id="sidenavContainer" fullscreen>
+    <mat-sidenav mode="side" #sidenav id="sidenav" [class.menu-open]="isMenuOpen" [class.menu-close]="!isMenuOpen"
+        opened>
+
+        <mat-list id="menus">
+            <mat-card>
+                <mat-card-header>
+                    <div mat-card-avatar class="avatar"></div>
+
+                    <mat-card-title>John Doe</mat-card-title>
+                    <mat-card-subtitle>Internal</mat-card-subtitle>
+                </mat-card-header>
+            </mat-card>
+            <mat-list-item>
+                <button class="menu-item" mat-flat-button>
+                    <mat-icon>dashboard</mat-icon>
+                    Dashboard
+                </button>
+            </mat-list-item>
+
+            <mat-list-item>
+                <button class="menu-item" mat-flat-button>
+                    <mat-icon>work</mat-icon>
+                    Project
+                </button>
+            </mat-list-item>
+
+            <mat-list-item>
+                <button class="menu-item" mat-flat-button>
+                    <mat-icon>settings_application</mat-icon>
+                    Settings
+                </button>
+            </mat-list-item>
+
+        </mat-list>
+    </mat-sidenav>
+
+
+</mat-sidenav-container> -->
