@@ -5,6 +5,7 @@ import { AirMeasurement } from '../../modelos/air-measurement';
 
 import * as Highcharts from 'highcharts';
 import { interval, Subscription } from 'rxjs';
+import { NgForm } from '@angular/forms';
 /* var hs =  'https://www.highcharts.com/media/com_demo/js/highslide-full.min.js';
 <script src="https://www.highcharts.com/media/com_demo/js/highslide-full.min.js"></script>
 <script src="https://www.highcharts.com/media/com_demo/js/highslide.config.js" charset="utf-8"></script>
@@ -36,20 +37,25 @@ var limite2 = 50000.1863730758;
 })
 export class AirMeasurementComponent implements OnInit {
 
-  constructor(
-    private airMeasurementService: AirMeasurementService,
-    private http: HttpClient
-  ) { }
-  subscription: Subscription;
+  constructor(private airMeasurementService: AirMeasurementService){ }
+  //subscription: Subscription;
 
   ngOnInit(): void {
 
-    console.log('air-measurement Component:'+this.getPM10idstation('Gobierno'));
-
-    this.options.series[0]['data'] = this.getPM10idstation('Gobierno');
-    this.options.series[1].data = this.getPM10idstation('Universidad');
+   // console.log('air-measurement Component:'+this.getPM10idstation('Gobierno'));
+   // this.getPM10idstation('Gobierno');
+    //this.options.series[0]['data'] =
+    //this.options.series[1].data = this.getPM10idstation('Universidad');
     Highcharts.chart('container', this.options);
     // this.getAirMeasurements();
+
+    this.getAirMeasurement();
+  }
+  getAirMeasurement() {
+    this.airMeasurementService.getAirMeasurement()
+      .subscribe(res => {
+        this.airMeasurementService.airMs = res as AirMeasurement[];
+      });
   }
 
   getPM10idstation(idStation: String) {
