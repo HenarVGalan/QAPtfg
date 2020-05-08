@@ -14,12 +14,11 @@ export class AirMeasurementService {
   airMs : AirMeasurement[];
 
   constructor(private http: HttpClient) {
-    //this.selectedAirMeasurement = new AirMeasurement();
+    this.selectedAirMeasurement = new AirMeasurement();
   }
   //Obtiene todo AirMeasurement
   getAirMeasurement(){
     return this.http.get(this.URL_API);
-
   }
   /* getPM10_idStation(air: AirMeasurement ) {
     return this.http.get(this.URL_API+ `/${air.idStation}`);

@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
 import { AirMeasurementService } from '../../servicios/air-measurement.service';
 import { AirMeasurement } from '../../modelos/air-measurement';
 
 import * as Highcharts from 'highcharts';
 import { interval, Subscription } from 'rxjs';
-import { NgForm } from '@angular/forms';
-/* var hs =  'https://www.highcharts.com/media/com_demo/js/highslide-full.min.js';
-<script src="https://www.highcharts.com/media/com_demo/js/highslide-full.min.js"></script>
-<script src="https://www.highcharts.com/media/com_demo/js/highslide.config.js" charset="utf-8"></script>
-<link rel="stylesheet" type="text/css" href="https://www.highcharts.com/media/com_demo/css/highslide.css" /> */
+
 declare var require: any;
 let Boost = require('highcharts/modules/boost');
 let noData = require('highcharts/modules/no-data-to-display');
@@ -20,14 +17,9 @@ noData(Highcharts);
 More(Highcharts);
 noData(Highcharts);
 
-/* EEA
-limites: "> 50 µg / m3", ventana: "Batch. Diario"
-limites: "> 40 µg / m3", ventana: "Batch. Anual
-WHO
-limites: "> 50 µg / m3", ventana: "Batch. Diario"
-"> 20 µg / m3", ventana: "Batch. Anual" */
-var limite1 = 48614.1863730758;
-var limite2 = 50000.1863730758;
+var limite_bdiario_eea_who = 50;  //µg / m3
+var limite_banual_eea = 40 //µg / m3
+var limite_banual_who = 20 //µg / m3
 
 @Component({
   selector: 'app-air-measurement',
@@ -37,25 +29,26 @@ var limite2 = 50000.1863730758;
 })
 export class AirMeasurementComponent implements OnInit {
 
-  constructor(private airMeasurementService: AirMeasurementService){ }
+  constructor(public airMeasurementService: AirMeasurementService) { }
   //subscription: Subscription;
 
   ngOnInit(): void {
 
-   // console.log('air-measurement Component:'+this.getPM10idstation('Gobierno'));
-   // this.getPM10idstation('Gobierno');
-    //this.options.series[0]['data'] =
+    // console.log('air-measurement Component:'+this.getPM10idstation('Gobierno'));
+    // this.getPM10idstation('Gobierno');
+    //this.options.series[1]['data'] = this.getAirMeasurement('Gobierno');
     //this.options.series[1].data = this.getPM10idstation('Universidad');
     Highcharts.chart('container', this.options);
-    // this.getAirMeasurements();
+    this.getAirMeasurement('Gobierno');
 
-    this.getAirMeasurement();
   }
-  getAirMeasurement() {
-    this.airMeasurementService.getAirMeasurement()
+
+  getAirMeasurement(idStation: String) {
+    this.airMeasurementService.getPM10_idStation(idStation)
       .subscribe(res => {
         this.airMeasurementService.airMs = res as AirMeasurement[];
       });
+    console.log('hola');
   }
 
   getPM10idstation(idStation: String) {
@@ -68,16 +61,26 @@ export class AirMeasurementComponent implements OnInit {
 
   public options: any = {
 
-  /*    data: {
-       csvURL: 'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/analytics.csv',
-       beforeParse: function (csv) {
-         return csv.replace(/\n\n/g, '\n');
-       }
-     }, */
+    /*    data: {
+         csvURL: 'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/analytics.csv',
+         beforeParse: function (csv) {
+           return csv.replace(/\n\n/g, '\n');
+         }
+       }, */
     chart: {
-      renderTo: 'container',
+      zoomType: 'xy',
+      panning: true,
+      panKey: 'shift',
+      resetZoomButton: {
+        position: {
+          // align: 'right', // by default
+          // verticalAlign: 'top', // by default
+          x: 0,
+          y: -30
+        }
+      },
       scrollablePlotArea: {
-        minWidth: 700
+        minWidth: 1000
       }
     },
     title: {
@@ -94,13 +97,7 @@ export class AirMeasurementComponent implements OnInit {
       align: 'right',
       verticalAlign: 'middle'
     },
-    // plotOptions: {
-    //   series: {
-    //     label: {
-    //       connectorAllowed: false
-    //     },
-    //   }
-    // },
+
     plotOptions: {
       series: {
         cursor: 'pointer',
@@ -108,16 +105,16 @@ export class AirMeasurementComponent implements OnInit {
           events: {
             click: function (e) {
               /*
-                               hs.htmlExpand(null, {
-                                   pageOrigin: {
-                                       x: e.pageX || e.clientX,
-                                       y: e.pageY || e.clientY
-                                   },
-                                   headingText: this.series.name,
-                                   maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
-                                       this.y + ' sessions',
-                                   width: 200
-                               });*/
+                hs.htmlExpand(null, {
+                    pageOrigin: {
+                        x: e.pageX || e.clientX,
+                        y: e.pageY || e.clientY
+                    },
+                    headingText: this.series.name,
+                    maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
+                        this.y + ' sessions',
+                    width: 200
+                });*/
             }
           }
         },
@@ -126,19 +123,10 @@ export class AirMeasurementComponent implements OnInit {
         }
       }
     },
-    /*     tooltip: {
-          formatter: function () {
-            return 'Hora: ' + Highcharts.dateFormat('%H:%M:%S ', this.x) +
-              ' valor: ' + this.y.toFixed(2);
-          }
-        }, */
     tooltip: {
+      distance: 25,
       shared: true,
       crosshairs: true,
-      // xDateFormat: '%e %b %y - %H:%M:%S',
-      /*  dateTimeLabelFormats: {
-         hour: ['%A, %b %e, %H:%M.'],
-       } */
       dateTimeLabelFormats: {
         millisecond: ['%A, %b %e, %H:%M:%S.%L', '%A, %b %e, %H:%M:%S.%L', '* %H:%M:%S.%L'],
         second: ['%A, %b %e, %H:%M:%S', '%A, %b %e, %H:%M:%S', '-* %H:%M:%S'],
@@ -164,62 +152,78 @@ export class AirMeasurementComponent implements OnInit {
           return Highcharts.dateFormat('%e %b %y %H:%M:%S', this.value);
         }
       },
-      accessibility: {
-        rangeDescription: 'Range: 2010 to 2017'
-      },
-
     },
     yAxis: {
       title: {
         text: ''
       },
-      showFirstLabel: false,
-      // gridLineWidth: 1,
+
+      plotBands: [{
+        color: '#f8ff7965',
+        from: 20,
+        to: 40
+      },
+      {
+        color: '#f1b25e81',
+        from: 40,
+        to: 50
+      },
+      {
+        color: '#f1805e86',
+        from: 50,
+        to: 70,
+      }],
       plotLines: [
         {
-          value: limite1,
+          value: limite_bdiario_eea_who,
           color: 'red',
           dashStyle: 'shortdash',
           width: 2,
           label: {
-            text: 'Límite > 120 µg / m3'
+            verticalAlign: 'bottom',
+            text: 'EAA WHO Batch Diario > 50 µg / m3'
           }
         },
         {
-          value: limite2,
-          color: 'pink',
+          value: limite_banual_eea,
+          color: 'orange',
           dashStyle: 'shortdash',
           width: 2,
           label: {
-            text: 'Límite > 300 µg / m3'
+            text: 'EEA Batch Anual > 40 µg / m3'
+          }
+        },
+        {
+          value: limite_banual_who,
+          color: '#FCFFC5',
+          dashStyle: 'shortdash',
+          width: 2,
+          label: {
+            text: 'WHO Batch Anual > 20 µg / m3'
           }
         }
 
       ]
     },
-    /* series: [
+    series: [
       {
         name: 'Barrax',
-
         data: [
-          [new Date('2019-12-11 09:00:00').getTime(), 48614.1863730758],
-          [new Date('2019-12-11 08:00:00').getTime(), 50814.8663438682],
-          [new Date('2019-12-11 07:00:00').getTime(), 48335.8498499774],
-          [new Date('2019-12-11 06:00:00').getTime(), 48491.236721052]
+          [new Date('2019-12-11 09:00:00').getTime(), 50],
+          [new Date('2019-12-11 08:00:00').getTime(), 30],
+          [new Date('2019-12-11 07:00:00').getTime(), 12],
+          [new Date('2019-12-11 06:00:00').getTime(), 25]
         ]
       },
       {
         name: 'Gobierno',
-
         data: [
-          [new Date('2019-12-11 09:30:00').getTime(), 48614.1863730758],
-          [new Date('2019-12-11 08:30:00').getTime(), 50814.8663438682],
-          [new Date('2019-12-11 08:00:00').getTime(), 50814.8663438682],
-
-          [new Date('2019-12-11 07:30:00').getTime(), 48335.8498499774],
-          [new Date('2019-12-11 06:30:00').getTime(), 48491.236721052]]
+          [new Date('2019-12-11 09:00:00').getTime(), 23],
+          [new Date('2019-12-11 08:00:00').getTime(), 10],
+          [new Date('2019-12-11 07:00:00').getTime(), 15],
+          [new Date('2019-12-11 06:00:00').getTime(), 45]]
       }
-    ] */
+    ]
     /*   series: [{
         name: 'All sessions',
         lineWidth: 4,
@@ -229,7 +233,7 @@ export class AirMeasurementComponent implements OnInit {
       }, {
         name: 'New users'
       }] */
-    series: [
+    /* series: [
       {
         name: 'Gobierno',
         turboThreshold: 500000,
@@ -240,10 +244,6 @@ export class AirMeasurementComponent implements OnInit {
         turboThreshold: 500000,
 
       }
-    ]
+    ] */
   }
-
-
-
-
 }
