@@ -9,13 +9,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { HighchartsChartComponent } from 'highcharts-angular';
 
-import { AirMeasurementComponent } from './air-measurement/air-measurement.component';
-import { AirMeasurementListComponent } from './air-measurement/air-measurement-list/air-measurement-list.component';
-import { AirMeasurementDetailsComponent } from './air-measurement/air-measurement-details/air-measurement-details.component';
-
+import { AirMeasurementComponent } from './componentes/air-measurement/air-measurement.component';
 import { HttpModule } from '@angular/http';
 
-import { AirMeasurementService } from './air-measurement/air-measurement.service'
+import { AirMeasurementService } from './servicios/air-measurement.service'
 //import { PM10Module } from './pm10/pm10.module';
 
 
@@ -34,9 +31,7 @@ import { AirMeasurementService } from './air-measurement/air-measurement.service
     ],
     declarations: [
         HighchartsChartComponent,
-        AirMeasurementComponent,
-        AirMeasurementListComponent,
-        AirMeasurementDetailsComponent
+        AirMeasurementComponent
     ]
 
 })

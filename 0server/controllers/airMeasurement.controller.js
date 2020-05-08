@@ -1,108 +1,150 @@
-const AirM = require('../models/airMeasurementModel');
+const AirMeasurement = require('../models/airMeasurement');
 
 const airMCtrl = {};
-/* routes */
-/* 
-router.get('/', airM.getAirMeasurement);
-router.post('/', airM.createAirMeasurement);
-router.get('/:id', airM.getAirMeasurement);
-router.put('/:id', airM.editAirMeasurement);
-router.delete('/:id', airM.deleteAirMeasurement); 
-*/
-// db.getCollection('AirMeasurement').find({})
 
-airMCtrl.getAirMeasurement = async (req, res, next) => {    
-    const aires = await AirM.find();    
-    res.json(aires);
-};
-
-airMCtrl.getAirMeasurement_idStation = async (req, res, next) => {
-    
-    const { idStation } = req.params;
-    const air = await AirM.find(idStation);
-    res.json(air);
-
-};
-airMCtrl.getAirMeasurement_timestampSensor = async (req, res, next) => {
-    const { timestampSensor } = req.params;
-    const air = await AirM.findById(timestampSensor);
-    res.json(air);
-};
-airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
-    const { pm10 } = req.params;
-    const air = await AirM.find(pm10);
-    res.json(air);
-};
-
-airMCtrl.createAirMeasurement = async (req, res, next) => {
-    const air = new AirM({
-        id: req.body.id,
-        idStation : req.body.idStation,
-        timestampSensor : req.body.timestampSensor,
-        pm10 : req.body.pm10,
-        pm2_5 : req.body.pm2_5,
-        no2  : req.body.no2,
-        no2C  : req.body.no2C,
-        o3 : req.body.o3,
-        o3C : req.body.o3C,
-        co  : req.body.co,
-        coC  : req.body.coC
-
-    });
-    await air.save();
-    res.json({status: 'AirM created'});
-};
-
-
-/* 
-airMCtrl.createAirMeasurement = async (req, res, next) => {
-    
-    // console.log(req.body);
-    // res.json('received') 
-    
-    const air = new AirM({
-        name: req.body.name,
-        position: req.body.position,
-        office: req.body.office,
-        salary: req.body.salary
-    });
-    await air.save();
-    res.json({status: 'AirM created'});
-};
-airMCtrl.createAirMeasurement = async (req, res, next) => {
-    const air = new AirM({
-        name: req.body.name,
-        position: req.body.position,
-        office: req.body.office,
-        salary: req.body.salary
-    });
-    await air.save();
-    res.json({status: 'AirM created'});
-};
 
 airMCtrl.getAirMeasurement = async (req, res, next) => {
-    const { id } = req.params;
-    const air = await AirM.findById(id);
+    //var aires = await AirMeasurement.findOne({});
+    //Solo los 10 últimos registros
+    const aires = await AirMeasurement.find().sort({ _id: -1 }).limit(50);
+
+    res.json(aires);
+    /*     res.json({
+            "status": 200,
+            "body": aires
+        }); */
+
+    /*     const employees = await Employee.find();
+        res.json(employees); */
+};
+
+// executes, name LIKE john and only selecting the "name" and "friends" fields
+// MyModel.find({ name: /john/i }, 'name friends', function (err, docs) { })
+airMCtrl.getAirMeasurement_pm10All = async (req, res, next) => {
+    
+    const aires = await AirMeasurement.find('timestampSensor idStation pm10').sort({ _id: -1 }).limit(50);
+
+    res.json(aires);
+};
+airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
+    const { idStation } = req.params;
+    const aires = await AirMeasurement.find({
+        idStation: idStation
+    },
+        'pm10 timestamp').sort({ _id: -1 }).limit(150);
+
+    res.json(aires);
+};
+/* airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
+    const { idStation } = req.params;
+    const aires = await AirMeasurement.aggregate([
+        { $match: { idStation: idStation } },
+        { $project: { _id: 1, pm10:1 } },
+        {
+            $group: {
+                _id: '$timestamp',
+
+
+            }
+        }//$region is the column name in collection
+
+    ]);
+    res.json(aires);
+}; */
+
+airMCtrl.getAirMeasurement_idStation = async (req, res, next) => {
+
+    const { idStation } = req.params;
+    const air = await AirMeasurement.find({
+        idStation: idStation
+    },
+        'timestampSensor idStation pm10 pm2_5 no2 no2C o3 o3C co coC');
+    res.json(air);
+
+};
+// Find the max balance of all accounts
+/* 
+Users.aggregate([
+    { $group: { _id: null, maxBalance: { $max: '$balance' }}},
+    { $project: { _id: 0, maxBalance: 1 }}
+  ]).
+  then(function (res) {
+    console.log(res); // [ { maxBalance: 98000 } ]
+  }); 
+
+***select * from table group by name
+  table.aggregate([
+        {
+            $group: {
+                _id: '$name',  //$region is the column name in collection
+                count: {$sum: 1}
+            }
+        }
+    ], function (err, result) {
+        if (err) {
+            next(err);
+        } else {
+            res.json(result);
+        }
+    });
+  */
+/*  
+{$match:{"your find query"}},
+ {$project:{"your desired fields"}} 
+ */
+airMCtrl.getAirMeasurement_idStationContaminante = async (req, res, next) => {
+
+    const { idStation } = req.params;
+    const air = await AirMeasurement.aggregate([
+        { $match: { idStation: idStation } },
+        { $project: { _id: 0 } },
+        {
+            $group: {
+                _id: '$id',
+
+
+            }
+        }//$region is the column name in collection
+
+    ]);
+    res.json(air);
+
+};
+
+airMCtrl.getAirMeasurement_timestampSensor = async (req, res, next) => {
+    const { timestampSensor } = req.params;
+    const air = await AirMeasurement.findById(timestampSensor);
     res.json(air);
 };
 
-airMCtrl.editAirMeasurement = async (req, res, next) => {
-    const { id } = req.params;
-    const air = {
-        name: req.body.name,
-        position: req.body.position,
-        office: req.body.office,
-        salary: req.body.salary
-    };
-    await AirM.findByIdAndUpdate(id, {$set: air}, {new: true});
-    res.json({status: 'AirM Updated'});
-};
+airMCtrl.createAirMeasurement = async (req, res, next) => {
+    const air = new AirMeasurement({
+        id: req.body.id,
+        idStation: req.body.idStation,
+        timestampSensor: req.body.timestampSensor,
+        pm10: req.body.pm10,
+        pm2_5: req.body.pm2_5,
+        no2: req.body.no2,
+        no2C: req.body.no2C,
+        o3: req.body.o3,
+        o3C: req.body.o3C,
+        co: req.body.co,
+        coC: req.body.coC,
+        pm1: req.body.pm1,
+        date: req.body.date,
+        serial: req.body.serial,
+        pressure: req.body.pressure,
+        temperature: req.body.pressure,
+        humidity: req.body.humidity,
+        luminosity: req.body.luminosity,
+        baterryVolts: req.body.baterryVolts,
+        batteryCurrent: req.body.batteryCurrent,
+        batteryLevel: req.body.batteryLevel,
+        timestamp: req.body.timestamp
 
-airMCtrl.deleteAirMeasurement = async (req, res, next) => {
-    await AirM.findByIdAndRemove(req.params.id);
-    res.json({status: 'AirM Deleted'});
+    });
+    await air.save();
+    res.json({ status: 'AirM created' });
 };
-
-*/
 
 module.exports = airMCtrl;

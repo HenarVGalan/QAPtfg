@@ -31,6 +31,7 @@ export class PM10Component implements OnInit {
          }
      }, */
     chart: {
+      zoomType : 'xy',
       scrollablePlotArea: {
         minWidth: 700
       }
@@ -63,7 +64,7 @@ export class PM10Component implements OnInit {
           events: {
             click: function (e) {
               alert('Category: hola');
-              
+
            /*    hs.htmlExpand(null, {
                   pageOrigin: {
                       x: e.pageX || e.clientX,
@@ -91,7 +92,7 @@ export class PM10Component implements OnInit {
     tooltip: {
       shared: true,
       crosshairs: true,
-      // xDateFormat: '%e %b %y - %H:%M:%S',  
+      // xDateFormat: '%e %b %y - %H:%M:%S',
      /*  dateTimeLabelFormats: {
         hour: ['%A, %b %e, %H:%M.'],
       } */
@@ -156,7 +157,7 @@ export class PM10Component implements OnInit {
     series: [
       {
         name: 'Barrax',
-       
+
         data: [
           [new Date('2019-12-11 09:00:00').getTime(), 48614.1863730758],
           [new Date('2019-12-11 08:00:00').getTime(), 50814.8663438682],
@@ -166,7 +167,7 @@ export class PM10Component implements OnInit {
       },
       {
         name: 'Gobierno',
-        
+
         data: [
           [new Date('2019-12-11 09:30:00').getTime(), 48614.1863730758],
           [new Date('2019-12-11 08:30:00').getTime(), 50814.8663438682],
