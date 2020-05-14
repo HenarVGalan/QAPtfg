@@ -14,23 +14,36 @@
           <div id="container"></div>
           <p class="highcharts-description">
           </p>
+          <table id = "datos" class="striped highlight black-text">
+            <thead>
+              <th>timestampSensor</th>
+              <th>pm10</th>
+
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of airMeasurementService.airMs">
+                <td>{{ item.timestampSensor }}</td>
+                <td>{{ item.pm10 }}</td>
+              </tr>
+            </tbody>
+          </table>
         </figure>
 
       </mat-card-content>
     </mat-card>
-    <table class="striped highlight black-text">
+  <!--   <table id = "datos" class="striped highlight black-text">
       <thead>
+        <th>timestampSensor</th>
         <th>pm10</th>
-        <th>idStation</th>
 
       </thead>
       <tbody>
         <tr *ngFor="let item of airMeasurementService.airMs">
+          <td>{{ item.timestampSensor }}</td>
           <td>{{ item.pm10 }}</td>
-          <td>{{ item.idStation }}</td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
 
   </div>
 </div>

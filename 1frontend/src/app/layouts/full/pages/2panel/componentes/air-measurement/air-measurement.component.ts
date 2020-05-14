@@ -30,7 +30,6 @@ var limite_banual_who = 20 //µg / m3
 export class AirMeasurementComponent implements OnInit {
 
   constructor(public airMeasurementService: AirMeasurementService) { }
-  //subscription: Subscription;
 
   ngOnInit(): void {
 
@@ -38,20 +37,15 @@ export class AirMeasurementComponent implements OnInit {
     // this.getPM10idstation('Gobierno');
     //this.options.series[1]['data'] = this.getAirMeasurement('Gobierno');
     //this.options.series[1].data = this.getPM10idstation('Universidad');
+    //this.options.series[0].data =this.getAirMeasurement('Gobierno');
+    //this.options.series[0].data =  this.getAirMeasurement('estacion3');
+    //this.options.series[0].data = this.getAirMeasurement('estacion3');
+    this.getAirMeasurement('estacion3');
     Highcharts.chart('container', this.options);
-    this.getAirMeasurement('Gobierno');
 
   }
 
   getAirMeasurement(idStation: String) {
-    this.airMeasurementService.getPM10_idStation(idStation)
-      .subscribe(res => {
-        this.airMeasurementService.airMs = res as AirMeasurement[];
-      });
-    console.log('hola');
-  }
-
-  getPM10idstation(idStation: String) {
     this.airMeasurementService.getPM10_idStation(idStation)
       .subscribe(res => {
         this.airMeasurementService.airMs = res as AirMeasurement[];
@@ -61,13 +55,15 @@ export class AirMeasurementComponent implements OnInit {
 
   public options: any = {
 
-    /*    data: {
-         csvURL: 'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/analytics.csv',
-         beforeParse: function (csv) {
-           return csv.replace(/\n\n/g, '\n');
-         }
-       }, */
+    data: {
+      //table: 'datos'
+      /*  csvURL: 'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/analytics.csv',
+       beforeParse: function (csv) {
+         return csv.replace(/\n\n/g, '\n');
+       } */
+    },
     chart: {
+      //renderTo: 'Container',
       zoomType: 'xy',
       panning: true,
       panKey: 'shift',
@@ -143,7 +139,6 @@ export class AirMeasurementComponent implements OnInit {
       align: 'left',
       x: 3,
       y: -3,
-      tickWidth: 1,
       labels: {
         align: 'left',
         x: 3,
@@ -157,7 +152,6 @@ export class AirMeasurementComponent implements OnInit {
       title: {
         text: ''
       },
-
       plotBands: [{
         color: '#f8ff7965',
         from: 20,
@@ -205,25 +199,55 @@ export class AirMeasurementComponent implements OnInit {
 
       ]
     },
-    series: [
+/*     series: [
       {
         name: 'Barrax',
-        data: [
-          [new Date('2019-12-11 09:00:00').getTime(), 50],
-          [new Date('2019-12-11 08:00:00').getTime(), 30],
-          [new Date('2019-12-11 07:00:00').getTime(), 12],
-          [new Date('2019-12-11 06:00:00').getTime(), 25]
-        ]
+        data: []
       },
       {
         name: 'Gobierno',
-        data: [
-          [new Date('2019-12-11 09:00:00').getTime(), 23],
-          [new Date('2019-12-11 08:00:00').getTime(), 10],
-          [new Date('2019-12-11 07:00:00').getTime(), 15],
-          [new Date('2019-12-11 06:00:00').getTime(), 45]]
+        data: []
       }
-    ]
+    ] */
+    //series: JSON.parse('hj'),
+     series: [
+       {
+         name: 'Barrax',
+         data: [
+           [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 50],
+           [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 30],
+           [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 12],
+           [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 25]
+         ]
+       },
+       {
+         name: 'Gobierno',
+         data: [
+           [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 23],
+           [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 10],
+           [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 15],
+           [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 45]]
+       }
+     ]
+    /*    series: [
+         {
+           name: 'Barrax',
+           data: [
+             [new Date('2019-12-11 09:00:00').getTime(), 50],
+             [new Date('2019-12-11 08:00:00').getTime(), 30],
+             [new Date('2019-12-11 07:00:00').getTime(), 12],
+             [new Date('2019-12-11 06:00:00').getTime(), 25]
+           ]
+         },
+         {
+           name: 'Gobierno',
+           data: [
+             [new Date('2019-12-11 09:00:00').getTime(), 23],
+             [new Date('2019-12-11 08:00:00').getTime(), 10],
+             [new Date('2019-12-11 07:00:00').getTime(), 15],
+             [new Date('2019-12-11 06:00:00').getTime(), 45]]
+         }
+       ] */
     /*   series: [{
         name: 'All sessions',
         lineWidth: 4,

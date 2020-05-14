@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 //const URI = 'mongodb://161.67.132.159:27018/dbhenar';
 
 //const URI = 'mongodb://localhost/AirMeasurement_local';
-
 const URI = 'mongodb://pluton.i3a.uclm.es:27018/dbhenar';
 
 mongoose.connect(URI, {

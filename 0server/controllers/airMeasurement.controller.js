@@ -26,20 +26,34 @@ airMCtrl.getAirMeasurement_pm10All = async (req, res, next) => {
 
     res.json(aires);
 };
+//router.get('/pm10/:idStation', airM.getAirMeasurement_pm10);timestampSensor
 airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
-    const { idStation } = req.params;
-    const aires = await AirMeasurement.find({
-        idStation: idStation
-    },
-        'pm10 timestamp').sort({ _id: -1 }).limit(150);
-
-    res.json(aires);
-};
-/* airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
     const { idStation } = req.params;
     const aires = await AirMeasurement.aggregate([
         { $match: { idStation: idStation } },
-        { $project: { _id: 1, pm10:1 } },
+        { $project: { _id: 0, timestampSensor:1,pm10:1 } },
+      //$region is the column name in collection
+
+    ]);
+
+    res.json(aires);
+};
+//imprime _id
+/* airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
+    const { idStation } = req.params;
+    const aires = await AirMeasurement.find({
+        idStation: idStation,
+        
+    },
+        ' timestampSensor pm10').sort({ timestampSensor: -1 }).limit(150);
+
+    res.json(aires);
+}; */
+/* airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
+    const { idStation } = req.params;
+        const aires = await AirMeasurement.aggregate([
+        { $match: { idStation: idStation } },
+        { $project: { _id: 0, pm10:1 } },
         {
             $group: {
                 _id: '$timestamp',
