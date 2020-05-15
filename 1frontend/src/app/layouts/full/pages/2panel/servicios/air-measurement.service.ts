@@ -12,6 +12,7 @@ export class AirMeasurementService {
 
   selectedAirMeasurement: AirMeasurement;
   airMs : AirMeasurement[];
+  seriesPM10 : Object;
 
   constructor(private http: HttpClient) {
     this.selectedAirMeasurement = new AirMeasurement();

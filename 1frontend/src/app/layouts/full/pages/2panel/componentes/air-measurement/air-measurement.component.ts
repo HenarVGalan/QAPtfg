@@ -31,32 +31,50 @@ export class AirMeasurementComponent implements OnInit {
 
   constructor(public airMeasurementService: AirMeasurementService) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    //esto parece que es lo que me vale
+    var series = [];
+    var hola = await this.getAirMeasurement('estacion3');
+    console.log(hola);
+    console.log("abutarda");
+    console.log(this.airMeasurementService.seriesPM10);
+    series.push({ "name": 'estacion3', data: this.airMeasurementService.seriesPM10});//{"name":"barrax", data:[]}
 
-    // console.log('air-measurement Component:'+this.getPM10idstation('Gobierno'));
-    // this.getPM10idstation('Gobierno');
-    //this.options.series[1]['data'] = this.getAirMeasurement('Gobierno');
-    //this.options.series[1].data = this.getPM10idstation('Universidad');
-    //this.options.series[0].data =this.getAirMeasurement('Gobierno');
-    //this.options.series[0].data =  this.getAirMeasurement('estacion3');
-    //this.options.series[0].data = this.getAirMeasurement('estacion3');
-    this.getAirMeasurement('estacion3');
+    //series.push(this.getAirMeasurement('estacion2'));
+    console.log(series);
+    this.options.series = series;
+    //this.getAirMeasurement('estacion3');
+    /* var series = [];
+    series.push({ "name": 'estacion3', data: this.getAirMeasurement('estacion3')});//{"name":"barrax", data:[]}
+    console.log(series); */
     Highcharts.chart('container', this.options);
 
   }
 
-  getAirMeasurement(idStation: String) {
-    this.airMeasurementService.getPM10_idStation(idStation)
+   async getAirMeasurement(idStation: String) {
+    await this.airMeasurementService.getPM10_idStation(idStation)
       .subscribe(res => {
-        this.airMeasurementService.airMs = res as AirMeasurement[];
+        this.airMeasurementService.seriesPM10 = res;
+        console.log(this.airMeasurementService.seriesPM10)
+        return res;
       });
 
   }
 
+/*   getAirMeasurement(idStation: String){
+    console.log(this.airMeasurementService.getPM10_idStation(idStation));
+
+    return () => {
+      this.airMeasurementService.getPM10_idStation(idStation);
+    }
+
+
+}*/
+
   public options: any = {
 
     data: {
-      //table: 'datos'
+
       /*  csvURL: 'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/analytics.csv',
        beforeParse: function (csv) {
          return csv.replace(/\n\n/g, '\n');
@@ -199,36 +217,27 @@ export class AirMeasurementComponent implements OnInit {
 
       ]
     },
-/*     series: [
-      {
-        name: 'Barrax',
-        data: []
-      },
-      {
-        name: 'Gobierno',
-        data: []
-      }
-    ] */
+    // series: [  ]
     //series: JSON.parse('hj'),
-     series: [
-       {
-         name: 'Barrax',
-         data: [
-           [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 50],
-           [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 30],
-           [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 12],
-           [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 25]
-         ]
-       },
-       {
-         name: 'Gobierno',
-         data: [
-           [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 23],
-           [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 10],
-           [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 15],
-           [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 45]]
-       }
-     ]
+    /*      series: [
+           {
+             name: 'Barrax',
+             data: [
+               [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 50],
+               [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 30],
+               [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 12],
+               [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 25]
+             ]
+           },
+           {
+             name: 'Gobierno',
+             data: [
+               [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 23],
+               [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 10],
+               [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 15],
+               [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 45]]
+           }
+         ] */
     /*    series: [
          {
            name: 'Barrax',

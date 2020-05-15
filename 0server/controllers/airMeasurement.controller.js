@@ -7,37 +7,112 @@ airMCtrl.getAirMeasurement = async (req, res, next) => {
     //var aires = await AirMeasurement.findOne({});
     //Solo los 10 últimos registros
     const aires = await AirMeasurement.find().sort({ _id: -1 }).limit(50);
-
     res.json(aires);
-    /*     res.json({
-            "status": 200,
-            "body": aires
-        }); */
 
-    /*     const employees = await Employee.find();
-        res.json(employees); */
 };
 
 // executes, name LIKE john and only selecting the "name" and "friends" fields
 // MyModel.find({ name: /john/i }, 'name friends', function (err, docs) { })
 airMCtrl.getAirMeasurement_pm10All = async (req, res, next) => {
-    
+
     const aires = await AirMeasurement.find('timestampSensor idStation pm10').sort({ _id: -1 }).limit(50);
 
     res.json(aires);
 };
 //router.get('/pm10/:idStation', airM.getAirMeasurement_pm10);timestampSensor
+
+/*********** Preparacion de datos para el front *******/
+/*
+//{"name":"barrax", data:[]}
+series : [{
+  name: 'Barrax',
+  data: [
+    [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 50],
+    [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 30],
+    [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 12],
+    [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 25]
+  ]
+}]*/
+/*[{"clave1": "valor1", "clave2": "valor2"},{}] - [[fecha,valor][fecha,valor]]*/
+
+/*********** Preparacion de datos para el front *******/
 airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
     const { idStation } = req.params;
     const aires = await AirMeasurement.aggregate([
         { $match: { idStation: idStation } },
-        { $project: { _id: 0, timestampSensor:1,pm10:1 } },
-      //$region is the column name in collection
-
+        { $project: { _id: 0, timestampSensor: 1, pm10: 1 } },
     ]);
-
-    res.json(aires);
+    
+   // console.log(prepareData(aires));
+    res.json(prepareData(aires));
 };
+/* list of dic to list of lists */
+function prepareData(list_dict) {
+    var arr = [];
+    list_dict.forEach(function (elemento, indice, array) {        
+        
+        (Object.keys(elemento)).forEach(function (elementoKey, indice, array) {
+            if ('timestampSensor' == elementoKey) {
+                console.log((elemento.timestampSensor));
+                console.log('fecha');
+                const date = elemento.timestampSensor;
+                console.log(date);
+
+                year = date.getUTCFullYear();
+                month = date.getUTCMonth();
+                day = date.getUTCDate();
+                hour = date.getUTCHours();
+                minute = date.getUTCMinutes();
+                second = date.getUTCSeconds();
+                millisecond = date.getUTCMilliseconds();
+
+                const utcDate = Date.UTC(year, month, day, hour, minute, second, millisecond);
+                console.log('utcDate :');
+                console.log(utcDate);
+                
+                arr.push([utcDate, elemento.pm10])
+            }
+
+        });
+
+    });
+    console.log('---');
+    //console.log( Object.keys(list_dict));
+    //console.log( Object.values(list_dict));
+    //aqui vemos que lo keys no vale, imprime 0 o 1
+    // const iterator1 = list_dict.keys();
+    // console.log(iterator1.next().value);
+    // console.log(iterator1.next().value);
+
+    /* console.log('---');
+    var arr = [];
+    var aux = [];
+    for (var dic in list_dict) {
+
+        for (var key in dic) {
+            if (dic.hasOwnProperty(key)) {
+                if (dic == "timestampSensor") aux.push(Date.UTC(key))
+                else aux.push(dic[key])
+            }
+        }
+        arr.push(aux);
+    } */
+    // console.log('***');
+    // list_dict = Object.assign({}, ...list_dict.map((x) => ( [x.timestampSensor], x.pm10 )));
+    // console.log('***');
+    // console.log(list_dict);
+    console.log('/////');
+    // Este for nos sive para ver los valores tal cual estan
+    // for (let value of Object.values(list_dict)) {
+    //     console.log(value); // John, then 30
+    // }
+    // console.log(list_dict);
+    console.log('/////');
+    // array.keys() function is called 
+
+
+    return arr;
+}
 //imprime _id
 /* airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
     const { idStation } = req.params;
