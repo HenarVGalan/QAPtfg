@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AirMeasurementService } from '../../servicios/air-measurement.service';
 import { AirMeasurement } from '../../modelos/air-measurement';
 
@@ -12,6 +12,7 @@ let Boost = require('highcharts/modules/boost');
 let noData = require('highcharts/modules/no-data-to-display');
 let More = require('highcharts/highcharts-more');
 
+
 Boost(Highcharts);
 noData(Highcharts);
 More(Highcharts);
@@ -20,7 +21,7 @@ noData(Highcharts);
 var limite_bdiario_eea_who = 50;  //µg / m3
 var limite_banual_eea = 40 //µg / m3
 var limite_banual_who = 20 //µg / m3
-
+var hs;
 @Component({
   selector: 'app-air-measurement',
   templateUrl: './air-measurement.component.html',
@@ -29,20 +30,25 @@ var limite_banual_who = 20 //µg / m3
 })
 export class AirMeasurementComponent implements OnInit {
 
-  constructor(public airMeasurementService: AirMeasurementService) { }
 
-  async ngOnInit(): Promise<void> {
-    //esto parece que es lo que me vale
-    var series = [];
+  constructor(public airMeasurementService: AirMeasurementService, public dialog: MatDialog) { }
+
+  ngOnInit() {
+
+
+    /*var series = [];
     var hola = await this.getAirMeasurement('estacion3');
     console.log(hola);
     console.log("abutarda");
     console.log(this.airMeasurementService.seriesPM10);
-    series.push({ "name": 'estacion3', data: this.airMeasurementService.seriesPM10});//{"name":"barrax", data:[]}
+    */
+    var series = [];
+    series.push({ "name": 'estacion3', data: this.getAirMeasurement('estacion3') });
+    //  series.push({ "name": 'estacion3', data: this.airMeasurementService.seriesPM10});//{"name":"barrax", data:[]}
 
     //series.push(this.getAirMeasurement('estacion2'));
-    console.log(series);
-    this.options.series = series;
+    //console.log(series);
+    // this.options.series = series;
     //this.getAirMeasurement('estacion3');
     /* var series = [];
     series.push({ "name": 'estacion3', data: this.getAirMeasurement('estacion3')});//{"name":"barrax", data:[]}
@@ -51,25 +57,24 @@ export class AirMeasurementComponent implements OnInit {
 
   }
 
-   async getAirMeasurement(idStation: String) {
-    await this.airMeasurementService.getPM10_idStation(idStation)
+  getAirMeasurement(idStation: String) {
+    this.airMeasurementService.getPM10_idStation(idStation)
       .subscribe(res => {
-        this.airMeasurementService.seriesPM10 = res;
-        console.log(this.airMeasurementService.seriesPM10)
-        return res;
+        this.airMeasurementService.airMs = res as AirMeasurement[];
       });
 
   }
 
-/*   getAirMeasurement(idStation: String){
-    console.log(this.airMeasurementService.getPM10_idStation(idStation));
+  /*   getAirMeasurement(idStation: String){
+      console.log(this.airMeasurementService.getPM10_idStation(idStation));
 
-    return () => {
-      this.airMeasurementService.getPM10_idStation(idStation);
-    }
+      return () => {
+        this.airMeasurementService.getPM10_idStation(idStation);
+      }
 
 
-}*/
+  }*/
+
 
   public options: any = {
 
@@ -118,17 +123,27 @@ export class AirMeasurementComponent implements OnInit {
         point: {
           events: {
             click: function (e) {
-              /*
-                hs.htmlExpand(null, {
-                    pageOrigin: {
-                        x: e.pageX || e.clientX,
-                        y: e.pageY || e.clientY
-                    },
-                    headingText: this.series.name,
-                    maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
-                        this.y + ' sessions',
-                    width: 200
-                });*/
+
+              /* this.dialog.openDialog(DialogPointgraphicComponent, {
+                pageOrigin: {
+                  x: e.pageX || e.clientX,
+                  y: e.pageY || e.clientY
+                },
+                headingText: this.series.name,
+                maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
+                  this.y + ' sessions',
+                width: 200
+              }) */
+              hs.htmlExpand(null, {
+                pageOrigin: {
+                  x: e.pageX || e.clientX,
+                  y: e.pageY || e.clientY
+                },
+                headingText: this.series.name,
+                maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
+                  this.y + ' sessions',
+                width: 200
+              });
             }
           }
         },
@@ -219,25 +234,25 @@ export class AirMeasurementComponent implements OnInit {
     },
     // series: [  ]
     //series: JSON.parse('hj'),
-    /*      series: [
-           {
-             name: 'Barrax',
-             data: [
-               [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 50],
-               [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 30],
-               [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 12],
-               [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 25]
-             ]
-           },
-           {
-             name: 'Gobierno',
-             data: [
-               [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 23],
-               [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 10],
-               [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 15],
-               [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 45]]
-           }
-         ] */
+    series: [
+      {
+        name: 'Barrax',
+        data: [
+          [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 50],
+          [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 30],
+          [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 12],
+          [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 25]
+        ]
+      },
+      {
+        name: 'Gobierno',
+        data: [
+          [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 23],
+          [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 10],
+          [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 15],
+          [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 45]]
+      }
+    ]
     /*    series: [
          {
            name: 'Barrax',
@@ -278,5 +293,19 @@ export class AirMeasurementComponent implements OnInit {
 
       }
     ] */
+  }
+}
+@Component({
+  selector: 'app-dialog-overview-example-dialog',
+  template: ``
+})
+export class DialogPointgraphicComponent {
+  constructor(
+    public dialogRef: MatDialogRef<DialogPointgraphicComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }
