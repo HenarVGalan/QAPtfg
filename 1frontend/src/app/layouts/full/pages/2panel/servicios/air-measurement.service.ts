@@ -21,10 +21,12 @@ export class AirMeasurementService {
   getAirMeasurement(){
     return this.http.get(this.URL_API);
   }
-  /* getPM10_idStation(air: AirMeasurement ) {
-    return this.http.get(this.URL_API+ `/${air.idStation}`);
-  } */
+
   getPM10_idStation(idStation: String) {
+    return this.http.get(this.URL_API+'/pm10/'+idStation);
+  }
+
+  getPM10_idStation2(idStation: String) {
 
     console.log(this.URL_API+ `/pm10/${idStation}`);
     return this.http.get(this.URL_API+ `/pm10/${idStation}`);

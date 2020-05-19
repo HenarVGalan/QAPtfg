@@ -41,77 +41,25 @@ airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
     const aires = await AirMeasurement.aggregate([
         { $match: { idStation: idStation } },
         { $project: { _id: 0, timestampSensor: 1, pm10: 1 } },
-    ]);
-    
-   // console.log(prepareData(aires));
-    res.json(prepareData(aires));
+    ]).limit(5);
+        
+    return res.json(
+        {"name" : idStation,
+        "data" : list_dict_to_timeseries_highcharts(aires)
+    });
 };
 /* list of dic to list of lists */
-function prepareData(list_dict) {
+function list_dict_to_timeseries_highcharts(list_dict){
     var arr = [];
-    list_dict.forEach(function (elemento, indice, array) {        
-        
-        (Object.keys(elemento)).forEach(function (elementoKey, indice, array) {
-            if ('timestampSensor' == elementoKey) {
-                console.log((elemento.timestampSensor));
-                console.log('fecha');
-                const date = elemento.timestampSensor;
-                console.log(date);
-
-                year = date.getUTCFullYear();
-                month = date.getUTCMonth();
-                day = date.getUTCDate();
-                hour = date.getUTCHours();
-                minute = date.getUTCMinutes();
-                second = date.getUTCSeconds();
-                millisecond = date.getUTCMilliseconds();
-
-                const utcDate = Date.UTC(year, month, day, hour, minute, second, millisecond);
-                console.log('utcDate :');
-                console.log(utcDate);
-                
-                arr.push([utcDate, elemento.pm10])
-            }
-
-        });
-
+    list_dict.forEach(function(json_item){
+        //arr.push(Object.keys(json_item).map((key) => json_item[key]));
+        arr.push(Object.keys(json_item).map(function(key){
+            if(key == "timestampSensor") return Date.parse(json_item[key]);
+            else return json_item[key];
+        }));
     });
-    console.log('---');
-    //console.log( Object.keys(list_dict));
-    //console.log( Object.values(list_dict));
-    //aqui vemos que lo keys no vale, imprime 0 o 1
-    // const iterator1 = list_dict.keys();
-    // console.log(iterator1.next().value);
-    // console.log(iterator1.next().value);
-
-    /* console.log('---');
-    var arr = [];
-    var aux = [];
-    for (var dic in list_dict) {
-
-        for (var key in dic) {
-            if (dic.hasOwnProperty(key)) {
-                if (dic == "timestampSensor") aux.push(Date.UTC(key))
-                else aux.push(dic[key])
-            }
-        }
-        arr.push(aux);
-    } */
-    // console.log('***');
-    // list_dict = Object.assign({}, ...list_dict.map((x) => ( [x.timestampSensor], x.pm10 )));
-    // console.log('***');
-    // console.log(list_dict);
-    console.log('/////');
-    // Este for nos sive para ver los valores tal cual estan
-    // for (let value of Object.values(list_dict)) {
-    //     console.log(value); // John, then 30
-    // }
-    // console.log(list_dict);
-    console.log('/////');
-    // array.keys() function is called 
-
-
-    return arr;
+    console.log(arr)
+    return arr
 }
 //imprime _id
 /* airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {

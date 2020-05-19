@@ -6,6 +6,8 @@ import { AirMeasurement } from '../../modelos/air-measurement';
 
 import * as Highcharts from 'highcharts';
 import { interval, Subscription } from 'rxjs';
+import { stringify } from 'querystring';
+import { FunctionCall } from '@angular/compiler';
 
 declare var require: any;
 let Boost = require('highcharts/modules/boost');
@@ -30,60 +32,35 @@ var hs;
 })
 export class AirMeasurementComponent implements OnInit {
 
-
+  series: any = [];
   constructor(public airMeasurementService: AirMeasurementService, public dialog: MatDialog) { }
 
   ngOnInit() {
-
-
-    /*var series = [];
-    var hola = await this.getAirMeasurement('estacion3');
-    console.log(hola);
-    console.log("abutarda");
-    console.log(this.airMeasurementService.seriesPM10);
-    */
-    var series = [];
-    series.push({ "name": 'estacion3', data: this.getAirMeasurement('estacion3') });
-    //  series.push({ "name": 'estacion3', data: this.airMeasurementService.seriesPM10});//{"name":"barrax", data:[]}
-
-    //series.push(this.getAirMeasurement('estacion2'));
-    //console.log(series);
-    // this.options.series = series;
-    //this.getAirMeasurement('estacion3');
-    /* var series = [];
-    series.push({ "name": 'estacion3', data: this.getAirMeasurement('estacion3')});//{"name":"barrax", data:[]}
-    console.log(series); */
-    Highcharts.chart('container', this.options);
-
+    this.init_graph()
   }
-
-  getAirMeasurement(idStation: String) {
-    this.airMeasurementService.getPM10_idStation(idStation)
+  async init_graph() {
+    await this.getAirMeasurement("Barrax");
+    await this.getAirMeasurement("Gobierno");
+    await this.getAirMeasurement("Poligono");
+   // await this.getAirMeasurement("Educacion").finally(FunctionCall(this.plot_series()));
+  }
+  plot_series() {
+    console.log(this.series);
+    this.options.series = this.series;
+    Highcharts.chart('container', this.options);
+  }
+  async getAirMeasurement(idStation: String) {
+    await this.airMeasurementService.getPM10_idStation2(idStation)
       .subscribe(res => {
         this.airMeasurementService.airMs = res as AirMeasurement[];
+        this.series.push(res);
+        console.log(this.series);
       });
-
   }
-
-  /*   getAirMeasurement(idStation: String){
-      console.log(this.airMeasurementService.getPM10_idStation(idStation));
-
-      return () => {
-        this.airMeasurementService.getPM10_idStation(idStation);
-      }
-
-
-  }*/
-
 
   public options: any = {
 
     data: {
-
-      /*  csvURL: 'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/analytics.csv',
-       beforeParse: function (csv) {
-         return csv.replace(/\n\n/g, '\n');
-       } */
     },
     chart: {
       //renderTo: 'Container',
@@ -160,11 +137,11 @@ export class AirMeasurementComponent implements OnInit {
         millisecond: ['%A, %b %e, %H:%M:%S.%L', '%A, %b %e, %H:%M:%S.%L', '* %H:%M:%S.%L'],
         second: ['%A, %b %e, %H:%M:%S', '%A, %b %e, %H:%M:%S', '-* %H:%M:%S'],
         minute: ['%A, %b %e, %H:%M', '%A, %b %e, %H:%M', '-** %H:%M'],
-        hour: ['%A, %b %e, %H:%M', '%A, %b %e, %H:%M', '-*** %H:%M'],
+        hour: ['%A, %b %e, %H:%M', '%A, %b %e, %H:%M', '-* %H:%M'],
         day: ['%A %e, %b, %Y', ' %H:%M:%S'],
-        week: ['Settimana del %d/%m/%Y', '%A, %b %e', '-**** %A, %b %e, %Y'],
-        month: ['%B %Y', '%B', '-***** %B %Y'],
-        year: ['%Y', '%Y', '-****** %Y']
+        week: ['Settimana del %d/%m/%Y', '%A, %b %e', '-** %A, %b %e, %Y'],
+        month: ['%B %Y', '%B', '-*** %B %Y'],
+        year: ['%Y', '%Y', '-** %Y']
       }
     },
     xAxis: {
@@ -232,67 +209,9 @@ export class AirMeasurementComponent implements OnInit {
 
       ]
     },
-    // series: [  ]
-    //series: JSON.parse('hj'),
     series: [
-      {
-        name: 'Barrax',
-        data: [
-          [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 50],
-          [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 30],
-          [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 12],
-          [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 25]
-        ]
-      },
-      {
-        name: 'Gobierno',
-        data: [
-          [Date.UTC(2019, 12, 11, 7, 0, 0, 0), 23],
-          [Date.UTC(2019, 12, 11, 8, 0, 0, 0), 10],
-          [Date.UTC(2019, 12, 11, 9, 0, 0, 0), 15],
-          [Date.UTC(2019, 12, 11, 10, 0, 0, 0), 45]]
-      }
     ]
-    /*    series: [
-         {
-           name: 'Barrax',
-           data: [
-             [new Date('2019-12-11 09:00:00').getTime(), 50],
-             [new Date('2019-12-11 08:00:00').getTime(), 30],
-             [new Date('2019-12-11 07:00:00').getTime(), 12],
-             [new Date('2019-12-11 06:00:00').getTime(), 25]
-           ]
-         },
-         {
-           name: 'Gobierno',
-           data: [
-             [new Date('2019-12-11 09:00:00').getTime(), 23],
-             [new Date('2019-12-11 08:00:00').getTime(), 10],
-             [new Date('2019-12-11 07:00:00').getTime(), 15],
-             [new Date('2019-12-11 06:00:00').getTime(), 45]]
-         }
-       ] */
-    /*   series: [{
-        name: 'All sessions',
-        lineWidth: 4,
-        marker: {
-          radius: 4
-        }
-      }, {
-        name: 'New users'
-      }] */
-    /* series: [
-      {
-        name: 'Gobierno',
-        turboThreshold: 500000,
 
-      },
-      {
-        name: 'Universidad',
-        turboThreshold: 500000,
-
-      }
-    ] */
   }
 }
 @Component({
