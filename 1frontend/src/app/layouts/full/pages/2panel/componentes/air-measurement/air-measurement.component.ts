@@ -40,11 +40,13 @@ export class AirMeasurementComponent implements OnInit {
   }
   async init_graph() {
     await this.getAirMeasurement("Barrax");
-    await this.getAirMeasurement("Gobierno");
-    await this.getAirMeasurement("Poligono");
+    //await this.getAirMeasurement("Gobierno");
+    //await this.getAirMeasurement("Poligono");
+    this.plot_series();
    // await this.getAirMeasurement("Educacion").finally(FunctionCall(this.plot_series()));
   }
   plot_series() {
+    console.log("this.series");
     console.log(this.series);
     this.options.series = this.series;
     Highcharts.chart('container', this.options);
@@ -54,6 +56,7 @@ export class AirMeasurementComponent implements OnInit {
       .subscribe(res => {
         this.airMeasurementService.airMs = res as AirMeasurement[];
         this.series.push(res);
+        console.log("this.series getAirMeasurement ");
         console.log(this.series);
       });
   }
@@ -69,8 +72,6 @@ export class AirMeasurementComponent implements OnInit {
       panKey: 'shift',
       resetZoomButton: {
         position: {
-          // align: 'right', // by default
-          // verticalAlign: 'top', // by default
           x: 0,
           y: -30
         }
