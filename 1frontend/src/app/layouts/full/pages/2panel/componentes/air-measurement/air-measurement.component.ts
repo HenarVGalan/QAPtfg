@@ -40,33 +40,26 @@ export class AirMeasurementComponent implements OnInit {
   }
   async init_graph() {
     await this.getAirMeasurement("Barrax");
-    //await this.getAirMeasurement("Gobierno");
-    //await this.getAirMeasurement("Poligono");
-    this.plot_series();
-   // await this.getAirMeasurement("Educacion").finally(FunctionCall(this.plot_series()));
+    await this.getAirMeasurement("Gobierno");
+    await this.getAirMeasurement("Poligono");
+    await this.getAirMeasurement("Educacion")
+    await this.getAirMeasurement("Universidad")
   }
-  plot_series() {
-    console.log("this.series");
-    console.log(this.series);
-    this.options.series = this.series;
-    Highcharts.chart('container', this.options);
-  }
+
   async getAirMeasurement(idStation: String) {
-    await this.airMeasurementService.getPM10_idStation2(idStation)
+    await this.airMeasurementService.getPM10_idStation(idStation)
       .subscribe(res => {
         this.airMeasurementService.airMs = res as AirMeasurement[];
         this.series.push(res);
-        console.log("this.series getAirMeasurement ");
-        console.log(this.series);
+        this.options.series = this.series;
+        Highcharts.chart('container', this.options);
       });
   }
 
   public options: any = {
-
     data: {
     },
     chart: {
-      //renderTo: 'Container',
       zoomType: 'xy',
       panning: true,
       panKey: 'shift',
@@ -154,6 +147,8 @@ export class AirMeasurementComponent implements OnInit {
         align: 'left',
         x: 3,
         y: -3,
+        //rotation: 90,
+        staggerLines: 2,
         formatter: function () {
           return Highcharts.dateFormat('%e %b %y %H:%M:%S', this.value);
         }
@@ -176,7 +171,7 @@ export class AirMeasurementComponent implements OnInit {
       {
         color: '#f1805e86',
         from: 50,
-        to: 70,
+        to: 125,
       }],
       plotLines: [
         {
@@ -211,6 +206,7 @@ export class AirMeasurementComponent implements OnInit {
       ]
     },
     series: [
+
     ]
 
   }
