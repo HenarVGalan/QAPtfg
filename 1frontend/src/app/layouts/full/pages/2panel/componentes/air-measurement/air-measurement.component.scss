@@ -1,4 +1,15 @@
-.highcharts-figure, .highcharts-data-table table {
+#container {
+  min-height: 500px;
+  min-width: 300px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.highcharts-legend-item:hover text{
+	fill: #5a5959;
+	transition: fill 250ms;
+}
+/* .highcharts-figure, .highcharts-data-table table {
   min-width: 800px;
   max-width: 1000px;
   margin: 1em auto;
@@ -32,3 +43,4 @@ font-weight: 600;
   background: #f1f7ff;
 }
 
+ */

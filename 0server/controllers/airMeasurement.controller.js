@@ -20,15 +20,34 @@ airMCtrl.getAirMeasurement_pm10All = async (req, res, next) => {
     res.json(aires);
 };
 //router.get('/pm10/:idStation', airM.getAirMeasurement_pm10);timestampSensor
-
+//timestampSensor: { $ne: null }
 /*********** Preparacion de datos para el front *******/
 airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
     const { idStation } = req.params;
     const aires = await AirMeasurement.aggregate([
-        { $match: { idStation: idStation } },
-        { $project: { _id: 0, timestampSensor: 1, pm10: 1 } },
-        { $sort: { timestampSensor: 1 } },
+        {
+            "$match": {
+                "idStation": idStation,
+                "timestampSensor": {
+                    "$exists": true,
+                    "$nin": [null, "NaN"] 
+                }
+            }
+        },
+        {
+            "$project": { _id: 0, timestampSensor: 1, pm10: 1 }
+        },
+        //mongoose group by time series
+        { "$sort": { timestampSensor: 1 } }
     ]).limit(20);
+
+    /*  const aires = await AirMeasurement.aggregate([
+         { $match: { idStation: idStation } },
+         { $project: { _id: 0, timestampSensor: 1, pm10: 1,
+              } },
+         { $sort: { timestampSensor: 1 } },
+         
+     ]).limit(20); */
 
     return res.json(
         {
@@ -41,12 +60,14 @@ airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
 /* list of dic to list of lists */
 function list_dict_to_timeseries_highcharts(list_dict) {
     var arr = [];
+    console.log(list_dict);
     list_dict.forEach(function (json_item) {
         //arr.push(Object.keys(json_item).map((key) => json_item[key]));
         arr.push(Object.keys(json_item).map(function (key) {
-            if (key == "timestampSensor"  ) {
-                /* console.log('json_item key'+json_item[key]);
-                console.log('Parse json_item key '+ Date.parse(json_item[key])); */                
+            if (key == "timestampSensor") {
+                console.log('json_item key' + json_item[key]);
+                console.log('Parse json_item key ' + Date.parse(json_item[key]));
+
                 return Date.parse(json_item[key]);
             }
             else return json_item[key];

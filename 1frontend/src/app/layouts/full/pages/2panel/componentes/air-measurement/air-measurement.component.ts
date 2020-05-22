@@ -1,18 +1,17 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AirMeasurementService } from '../../servicios/air-measurement.service';
 import { AirMeasurement } from '../../modelos/air-measurement';
 
-import * as Highcharts from 'highcharts';
-import { interval, Subscription } from 'rxjs';
-import { stringify } from 'querystring';
-import { FunctionCall } from '@angular/compiler';
+//import * as Highcharts from 'highcharts';
+import * as Highcharts from 'highcharts/highstock';
+//import{Highslide} from '../../../../../../../assets/highslide/src/assets/highslide';
 
 declare var require: any;
 let Boost = require('highcharts/modules/boost');
 let noData = require('highcharts/modules/no-data-to-display');
 let More = require('highcharts/highcharts-more');
+//import ('../../../../../../../assets/highslide/src/assets/highslide/highslide-full.min');
 
 
 Boost(Highcharts);
@@ -23,7 +22,7 @@ noData(Highcharts);
 var limite_bdiario_eea_who = 50;  //µg / m3
 var limite_banual_eea = 40 //µg / m3
 var limite_banual_who = 20 //µg / m3
-var hs;
+
 @Component({
   selector: 'app-air-measurement',
   templateUrl: './air-measurement.component.html',
@@ -38,6 +37,7 @@ export class AirMeasurementComponent implements OnInit {
   ngOnInit() {
     this.init_graph()
   }
+
   async init_graph() {
     await this.getAirMeasurement("Barrax");
     await this.getAirMeasurement("Gobierno");
@@ -52,42 +52,69 @@ export class AirMeasurementComponent implements OnInit {
         this.airMeasurementService.airMs = res as AirMeasurement[];
         this.series.push(res);
         this.options.series = this.series;
-        Highcharts.chart('container', this.options);
+        Highcharts.stockChart('container', this.options);
+        //Highcharts.chart('container', this.options);
+        //  Highstock.chart('container', this.options);
+
       });
   }
 
   public options: any = {
-    data: {
-    },
     chart: {
+
       zoomType: 'xy',
       panning: true,
       panKey: 'shift',
+      animation: true,
       resetZoomButton: {
         position: {
-          x: 0,
-          y: -30
-        }
+          x: -720,
+          y: 370
+        },
+        //relativeTo: 'chart'
       },
-      scrollablePlotArea: {
-        minWidth: 1000
-      }
+    },
+    responsive: {
+      rules: [{
+        condition: {
+          maxWidth: 500
+        },
+        chartOptions: {
+          chart: {
+            height: 300
+          },
+          subtitle: {
+            text: null
+          },
+          navigator: {
+            enabled: false
+          },
+          legend: {
+            align: 'center',
+            verticalAlign: 'bottom',
+            layout: 'horizontal'
+          }
+        }
+      }]
     },
     title: {
       text: 'PM10'
     },
-    subtitle: {
-      text: ''
-    },
-    credits: {
-      enabled: false
-    },
+    navigation: {
+      menuItemStyle: {
+          fontWeight: 'normal',
+          background: 'none'
+      },
+      menuItemHoverStyle: {
+          fontWeight: 'bold',
+          background: 'none',
+          color: 'black'
+      }
+  },
     legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle'
+      enabled: true,
+      align: 'center',
     },
-
     plotOptions: {
       series: {
         cursor: 'pointer',
@@ -105,7 +132,7 @@ export class AirMeasurementComponent implements OnInit {
                   this.y + ' sessions',
                 width: 200
               }) */
-              hs.htmlExpand(null, {
+              /*htmlExpand(null, {
                 pageOrigin: {
                   x: e.pageX || e.clientX,
                   y: e.pageY || e.clientY
@@ -114,7 +141,7 @@ export class AirMeasurementComponent implements OnInit {
                 maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
                   this.y + ' sessions',
                 width: 200
-              });
+              })*/
             }
           }
         },
@@ -124,30 +151,29 @@ export class AirMeasurementComponent implements OnInit {
       }
     },
     tooltip: {
-      distance: 25,
+      split: false,
       shared: true,
-      crosshairs: true,
       dateTimeLabelFormats: {
-        millisecond: ['%A, %b %e, %H:%M:%S.%L', '%A, %b %e, %H:%M:%S.%L', '* %H:%M:%S.%L'],
+        millisecond: ['%A %e, %b, %H:%M:%S.%L, %Y', '%A, %b %e, %H:%M:%S.%L', '%H:%M:%S.%L'],
         second: ['%A, %b %e, %H:%M:%S', '%A, %b %e, %H:%M:%S', '-* %H:%M:%S'],
         minute: ['%A, %b %e, %H:%M', '%A, %b %e, %H:%M', '-** %H:%M'],
         hour: ['%A, %b %e, %H:%M', '%A, %b %e, %H:%M', '-* %H:%M'],
-        day: ['%A %e, %b, %Y', ' %H:%M:%S'],
+        day: ['%A %e, %b, %Y', '%H:%M:%S'],
         week: ['Settimana del %d/%m/%Y', '%A, %b %e', '-** %A, %b %e, %Y'],
         month: ['%B %Y', '%B', '-*** %B %Y'],
         year: ['%Y', '%Y', '-** %Y']
-      }
+      },
+      distance: 25,
     },
     xAxis: {
+     // spacingBottom: 300,
       type: 'datetime',
-      align: 'left',
-      x: 3,
-      y: -3,
-      labels: {
-        align: 'left',
-        x: 3,
-        y: -3,
-        //rotation: 90,
+      align: 'center',
+
+       labels: {
+        align: 'center',
+
+        y: 20,
         staggerLines: 2,
         formatter: function () {
           return Highcharts.dateFormat('%e %b %y %H:%M:%S', this.value);
@@ -155,28 +181,30 @@ export class AirMeasurementComponent implements OnInit {
       },
     },
     yAxis: {
-      title: {
-        text: ''
-      },
+      labels: {
+        format: '{value} µg/m3',
+        align:'left'
+    },
+
       plotBands: [{
-        color: '#f8ff7965',
+        color: '#f8ff7936',
         from: 20,
         to: 40
       },
       {
-        color: '#f1b25e81',
+        color: '#f1b15e54',
         from: 40,
         to: 50
       },
       {
-        color: '#f1805e86',
+        color: '#f1805e31',
         from: 50,
         to: 125,
       }],
       plotLines: [
         {
           value: limite_bdiario_eea_who,
-          color: 'red',
+          color: '#f1805e94',
           dashStyle: 'shortdash',
           width: 2,
           label: {
@@ -186,7 +214,7 @@ export class AirMeasurementComponent implements OnInit {
         },
         {
           value: limite_banual_eea,
-          color: 'orange',
+          color: '#f1b15ec5',
           dashStyle: 'shortdash',
           width: 2,
           label: {
@@ -205,9 +233,7 @@ export class AirMeasurementComponent implements OnInit {
 
       ]
     },
-    series: [
-
-    ]
+    series: [ ]
 
   }
 }
