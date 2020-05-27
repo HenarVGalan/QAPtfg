@@ -52,6 +52,8 @@ export class AirMeasurementComponent implements OnInit {
         this.airMeasurementService.airMs = res as AirMeasurement[];
         this.series.push(res);
         this.options.series = this.series;
+        this.options.navigator.series = this.series;
+        // Highcharts.seriesTypes.line.prototype.drawLegendSymbol
         Highcharts.stockChart('container', this.options);
         //Highcharts.chart('container', this.options);
         //  Highstock.chart('container', this.options);
@@ -61,7 +63,6 @@ export class AirMeasurementComponent implements OnInit {
 
   public options: any = {
     chart: {
-
       zoomType: 'xy',
       panning: true,
       panKey: 'shift',
@@ -71,7 +72,6 @@ export class AirMeasurementComponent implements OnInit {
           x: -720,
           y: 370
         },
-        //relativeTo: 'chart'
       },
     },
     responsive: {
@@ -92,7 +92,7 @@ export class AirMeasurementComponent implements OnInit {
           legend: {
             align: 'center',
             verticalAlign: 'bottom',
-            layout: 'horizontal'
+            layout: 'horizontal',
           }
         }
       }]
@@ -102,21 +102,52 @@ export class AirMeasurementComponent implements OnInit {
     },
     navigation: {
       menuItemStyle: {
-          fontWeight: 'normal',
-          background: 'none'
+        fontWeight: 'normal',
+        background: 'none'
       },
       menuItemHoverStyle: {
-          fontWeight: 'bold',
-          background: 'none',
-          color: 'black'
+        fontWeight: 'bold',
+        background: 'none',
+        color: 'black'
       }
-  },
+    },
+
+    navigator: {
+      series: []
+    },
+    scrollbar: {
+      // liveRedraw: false,
+      barBackgroundColor: '#bdbdbd',
+      barBorderRadius: 5,
+      barBorderWidth: 0,
+      buttonBackgroundColor: '#bdbdbd',
+      buttonBorderWidth: 0,
+      buttonBorderRadius: 5,
+      trackBackgroundColor: 'none',
+      trackBorderWidth: 1,
+      trackBorderRadius: 8,
+      trackBorderColor: '#CCC'
+    },
     legend: {
       enabled: true,
       align: 'center',
+      squareSymbol: false,
+      itemStyle: {
+        fontSize: 15,
+      },
+      symbolWidth: 30,
+      symbolHeight: 30,
+
+      /*       symbolPadding: 10,
+            symbolWidth:30,
+            symbolHeight: 30,
+            symbolRadius: 30,
+            symbolPadding: 20,
+            symbolWidth: 50, */
     },
     plotOptions: {
       series: {
+        //lineWidth: 3,
         cursor: 'pointer',
         point: {
           events: {
@@ -146,7 +177,15 @@ export class AirMeasurementComponent implements OnInit {
           }
         },
         marker: {
-          lineWidth: 1
+          enabledThreshold: 10,
+          enabled: true,
+          width: 16,
+          height: 16,
+          //fillColor: 'red',
+          radius : 4,
+          lineColor: '#f3f1f162',
+          lineWidth: 2,
+
         }
       }
     },
@@ -154,8 +193,8 @@ export class AirMeasurementComponent implements OnInit {
       split: false,
       shared: true,
       dateTimeLabelFormats: {
-        millisecond: ['%A %e, %b, %H:%M:%S.%L, %Y', '%A, %b %e, %H:%M:%S.%L', '%H:%M:%S.%L'],
-        second: ['%A, %b %e, %H:%M:%S', '%A, %b %e, %H:%M:%S', '-* %H:%M:%S'],
+        millisecond: ['%H:%M:%S.%L <br/> %A %e, %b, , %Y', '%A, %b %e, %H:%M:%S.%L', '%H:%M:%S.%L'],
+        second: ['%A %e, %b %Y <br/> %H:%M:%S', '%A, %b %e, %H:%M:%S.%L', '%H:%M:%S.%L'],
         minute: ['%A, %b %e, %H:%M', '%A, %b %e, %H:%M', '-** %H:%M'],
         hour: ['%A, %b %e, %H:%M', '%A, %b %e, %H:%M', '-* %H:%M'],
         day: ['%A %e, %b, %Y', '%H:%M:%S'],
@@ -166,26 +205,22 @@ export class AirMeasurementComponent implements OnInit {
       distance: 25,
     },
     xAxis: {
-     // spacingBottom: 300,
       type: 'datetime',
       align: 'center',
-
-       labels: {
+      labels: {
         align: 'center',
-
         y: 20,
         staggerLines: 2,
         formatter: function () {
-          return Highcharts.dateFormat('%e %b %y %H:%M:%S', this.value);
+          return Highcharts.dateFormat('%H:%M:%S <br/> %e %b %Y', this.value);
         }
       },
     },
     yAxis: {
       labels: {
         format: '{value} µg/m3',
-        align:'left'
-    },
-
+        align: 'left'
+      },
       plotBands: [{
         color: '#f8ff7936',
         from: 20,
@@ -233,7 +268,7 @@ export class AirMeasurementComponent implements OnInit {
 
       ]
     },
-    series: [ ]
+    series: []
 
   }
 }
