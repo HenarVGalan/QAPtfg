@@ -9,7 +9,7 @@ const AirMeasurementSchema = new Schema({
         type: String
     },
     timestampSensor: {
-        type: Date
+        type: Number
     },    
     date: {
         type: Date

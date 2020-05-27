@@ -68,7 +68,7 @@ function list_dict_to_timeseries_highcharts(list_dict) {
                 console.log('json_item key' + json_item[key]);
                 console.log('Parse json_item key ' + Date.parse(json_item[key]));
 
-                return Date.parse(json_item[key]);
+                return(json_item[key] * 1000);
             }
             else return json_item[key];
         }));
