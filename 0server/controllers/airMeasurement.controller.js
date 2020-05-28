@@ -2,6 +2,22 @@ const AirMeasurement = require('../models/airMeasurement');
 
 const airMCtrl = {};
 
+/* list of dic to list of lists */
+function list_dict_to_timeseries_highcharts(list_dict) {
+    var arr = [];
+    console.log(list_dict);
+    list_dict.forEach(function (json_item) {
+        //arr.push(Object.keys(json_item).map((key) => json_item[key]));
+        arr.push(Object.keys(json_item).map(function (key) {
+            if (key == "timestampSensor") {
+                return (json_item[key] * 1000);
+            }
+            else return json_item[key];
+        }));
+    });
+    console.log(arr)
+    return arr
+}
 
 airMCtrl.getAirMeasurement = async (req, res, next) => {
     //var aires = await AirMeasurement.findOne({});
@@ -48,22 +64,90 @@ airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
         }
     );
 };
-/* list of dic to list of lists */
-function list_dict_to_timeseries_highcharts(list_dict) {
-    var arr = [];
-    console.log(list_dict);
-    list_dict.forEach(function (json_item) {
-        //arr.push(Object.keys(json_item).map((key) => json_item[key]));
-        arr.push(Object.keys(json_item).map(function (key) {
-            if (key == "timestampSensor") {
-                return (json_item[key] * 1000);
+
+airMCtrl.getAirMeasurement_pm10_batchdiario = async (req, res, next) => {
+    const { idStation } = req.params;
+    const aires = await AirMeasurement.aggregate([
+        //timestamp PARA EN PROJECT coger año, mes y día necesita formato DATE, no milisegundos
+        {
+            "$match": {
+                "idStation": idStation,
+                "timestamp": {
+                    "$exists": true,
+                    "$nin": [null, "NaN"]
+                }
             }
-            else return json_item[key];
-        }));
-    });
-    console.log(arr)
-    return arr
-}
+        },
+        {
+            "$project": {
+                _id: 1, pm10: 1, avgPM10: 1,
+                "year": { "$year": "$timestamp" },
+                "month": { "$month": "$timestamp" },
+                "dayOfMonth": { "$dayOfMonth": "$timestamp" }
+            }
+        },
+        {
+            "$group": {
+                _id: {
+                    "year": "$year",
+                    "month": "$month",
+                    "dayOfMonth": "$dayOfMonth"
+                },
+                avgPM10: { $avg: "$pm10" },
+
+            }
+        },
+
+        { "$sort": { _id: 1 } }
+    ]).limit(50);//cuidado con el limit , saldrán mas registros poniendo group.
+    return res.json(aires);
+    /*     return res.json(
+            {
+                "name": idStation,
+                "data": list_dict_to_timeseries_highcharts(aires)
+            }
+        ); */
+};
+
+airMCtrl.getAirMeasurement_pm10_batchanual = async (req, res, next) => {
+    const { idStation } = req.params;
+    const aires = await AirMeasurement.aggregate([
+        //timestamp PARA EN PROJECT coger año, mes y día necesita formato DATE, no milisegundos
+        {
+            "$match": {
+                "idStation": idStation,
+                "timestamp": {
+                    "$exists": true,
+                    "$nin": [null, "NaN"]
+                }
+            }
+        },
+        {
+            "$project": {
+                _id: 1, pm10: 1, avgPM10: 1,
+                "year": { "$year": "$timestamp" }
+            }
+        },
+        //mongoose group by time series
+        {
+            "$group": {
+                _id: {
+                    "year": "$year"
+                },
+                avgPM10: { $avg: "$pm10" },
+
+            }
+        },
+        { "$sort": { _id: 1 } }
+    ]).limit(500);//cuidado con el limit , saldrán mas registros poniendo group.
+    return res.json(aires);
+    /*     return res.json(
+            {
+                "name": idStation,
+                "data": list_dict_to_timeseries_highcharts(aires)
+            }
+        ); */
+};
 
 //imprime _id
 /* airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
