@@ -39,11 +39,16 @@ export class AirMeasurementComponent implements OnInit {
   }
 
   async init_graph() {
-    await this.getAirMeasurement("Barrax");
-    await this.getAirMeasurement("Gobierno");
-    await this.getAirMeasurement("Poligono");
-    await this.getAirMeasurement("Educacion")
-    await this.getAirMeasurement("Universidad")
+    /*  await this.getAirMeasurement("Barrax");
+     await this.getAirMeasurement("Gobierno");
+     await this.getAirMeasurement("Poligono");
+     await this.getAirMeasurement("Educacion")
+     await this.getAirMeasurement("Universidad") */
+    await this.getBatchDiario("Barrax");
+    await this.getBatchDiario("Gobierno");
+    await this.getBatchDiario("Poligono");
+    await this.getBatchDiario("Educacion")
+    await this.getBatchDiario("Universidad")
   }
 
   async getAirMeasurement(idStation: String) {
@@ -58,6 +63,17 @@ export class AirMeasurementComponent implements OnInit {
         //Highcharts.chart('container', this.options);
         //  Highstock.chart('container', this.options);
 
+      });
+  }
+  //por ahora solo pm10
+  async getBatchDiario(idStation: String) {
+    await this.airMeasurementService.getPM10_idStation_BatchDiario(idStation)
+      .subscribe(res => {
+        this.airMeasurementService.airMs = res as AirMeasurement[];
+        this.series.push(res);
+        this.options.series = this.series;
+        this.options.navigator.series = this.series;
+        Highcharts.stockChart('container', this.options);
       });
   }
 
@@ -182,7 +198,7 @@ export class AirMeasurementComponent implements OnInit {
           width: 16,
           height: 16,
           //fillColor: 'red',
-          radius : 4,
+          radius: 4,
           lineColor: '#f3f1f162',
           lineWidth: 2,
 

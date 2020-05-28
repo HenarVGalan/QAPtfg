@@ -18,6 +18,31 @@ function list_dict_to_timeseries_highcharts(list_dict) {
     console.log(arr)
     return arr
 }
+function toMilisegundos(list_dict){
+    var arr = [];
+    console.log(list_dict);
+    list_dict.forEach(function (json_item) {
+       
+        arr.push(Object.keys(json_item).map(function (key) {
+            if (key == "_id") {
+                year =json_item[key]['year'],
+                month= json_item[key]['month']-1;
+                day = json_item[key]['dayOfMonth'];
+                console.log('UTC');
+                console.log(Date.UTC(year,month, day));
+                return Date.UTC(year,month, day);
+               // return Date.UTC(json_item[key]['year'],json_item[key]['month'],json_item[key]['dayOfMonth']);
+                
+            }
+            else {
+                console.log('valor');
+                console.log(json_item[key]);
+                return json_item[key];}
+        }));
+    });
+    console.log(arr)
+    return arr
+}
 
 airMCtrl.getAirMeasurement = async (req, res, next) => {
     //var aires = await AirMeasurement.findOne({});
@@ -27,14 +52,6 @@ airMCtrl.getAirMeasurement = async (req, res, next) => {
 
 };
 
-// executes, name LIKE john and only selecting the "name" and "friends" fields
-// MyModel.find({ name: /john/i }, 'name friends', function (err, docs) { })
-airMCtrl.getAirMeasurement_pm10All = async (req, res, next) => {
-
-    const aires = await AirMeasurement.find('timestampSensor idStation pm10').sort({ _id: -1 }).limit(50);
-
-    res.json(aires);
-};
 //router.get('/pm10/:idStation', airM.getAirMeasurement_pm10);timestampSensor
 //timestampSensor: { $ne: null }
 /*********** Preparacion de datos para el front *******/
@@ -80,7 +97,7 @@ airMCtrl.getAirMeasurement_pm10_batchdiario = async (req, res, next) => {
         },
         {
             "$project": {
-                _id: 1, pm10: 1, avgPM10: 1,
+                _id: 1, pm10: 1, avgPM10: 1, 
                 "year": { "$year": "$timestamp" },
                 "month": { "$month": "$timestamp" },
                 "dayOfMonth": { "$dayOfMonth": "$timestamp" }
@@ -94,19 +111,21 @@ airMCtrl.getAirMeasurement_pm10_batchdiario = async (req, res, next) => {
                     "dayOfMonth": "$dayOfMonth"
                 },
                 avgPM10: { $avg: "$pm10" },
+               // max:{$max : "$pm10"} recuerda añadir a project
 
             }
         },
 
         { "$sort": { _id: 1 } }
     ]).limit(50);//cuidado con el limit , saldrán mas registros poniendo group.
-    return res.json(aires);
-    /*     return res.json(
+    
+   // return res.json(aires);
+          return res.json(
             {
                 "name": idStation,
-                "data": list_dict_to_timeseries_highcharts(aires)
+                "data": toMilisegundos(aires)
             }
-        ); */
+        );  
 };
 
 airMCtrl.getAirMeasurement_pm10_batchanual = async (req, res, next) => {
