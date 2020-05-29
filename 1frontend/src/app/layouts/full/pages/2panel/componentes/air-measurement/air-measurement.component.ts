@@ -32,6 +32,9 @@ var limite_banual_who = 20 //µg / m3
 export class AirMeasurementComponent implements OnInit {
 
   series: any = [];
+  seriesBatchDiario: any = [];
+  seriesBatchAnual: any = [];
+
   constructor(public airMeasurementService: AirMeasurementService, public dialog: MatDialog) { }
 
   ngOnInit() {
@@ -39,16 +42,26 @@ export class AirMeasurementComponent implements OnInit {
   }
 
   async init_graph() {
-    /*  await this.getAirMeasurement("Barrax");
+
+     await this.getAirMeasurement("Barrax");
      await this.getAirMeasurement("Gobierno");
      await this.getAirMeasurement("Poligono");
      await this.getAirMeasurement("Educacion")
-     await this.getAirMeasurement("Universidad") */
-    await this.getBatchDiario("Barrax");
+     await this.getAirMeasurement("Universidad")
+
+     await this.getBatchDiario("Barrax");
     await this.getBatchDiario("Gobierno");
     await this.getBatchDiario("Poligono");
-    await this.getBatchDiario("Educacion")
-    await this.getBatchDiario("Universidad")
+    await this.getBatchDiario("Educacion");
+    await this.getBatchDiario("Universidad");
+
+    await this.getBatchAnual("Barrax");
+    await this.getBatchAnual("Gobierno");
+    await this.getBatchAnual("Poligono");
+    await this.getBatchAnual("Educacion")
+    await this.getBatchAnual("Universidad");
+
+
   }
 
   async getAirMeasurement(idStation: String) {
@@ -58,6 +71,7 @@ export class AirMeasurementComponent implements OnInit {
         this.series.push(res);
         this.options.series = this.series;
         this.options.navigator.series = this.series;
+        this.options.title='normal';
         // Highcharts.seriesTypes.line.prototype.drawLegendSymbol
         Highcharts.stockChart('container', this.options);
         //Highcharts.chart('container', this.options);
@@ -70,13 +84,26 @@ export class AirMeasurementComponent implements OnInit {
     await this.airMeasurementService.getPM10_idStation_BatchDiario(idStation)
       .subscribe(res => {
         this.airMeasurementService.airMs = res as AirMeasurement[];
-        this.series.push(res);
-        this.options.series = this.series;
-        this.options.navigator.series = this.series;
-        Highcharts.stockChart('container', this.options);
+        this.seriesBatchDiario.push(res);
+        this.options.series = this.seriesBatchDiario;
+        this.options.navigator.series = this.seriesBatchDiario;
+        //Highcharts.chart('container', this.options);
+        this.options.title='Batch Diario';
+        Highcharts.stockChart('containerBatchDiario', this.options);
       });
   }
-
+  //getPM10_idStation_BatchAnual
+  async getBatchAnual(idStation: String) {
+    await this.airMeasurementService.getPM10_idStation_BatchAnual(idStation)
+      .subscribe(res => {
+        this.airMeasurementService.airMs = res as AirMeasurement[];
+        this.seriesBatchAnual.push(res);
+        this.options.series = this.seriesBatchAnual;
+        this.options.navigator.series = this.seriesBatchAnual;
+        this.options.title='Batch Anual';
+        Highcharts.stockChart('containerBatchAnual', this.options);
+      });
+  }
   public options: any = {
     chart: {
       zoomType: 'xy',
@@ -88,6 +115,7 @@ export class AirMeasurementComponent implements OnInit {
           x: -720,
           y: 370
         },
+        relativeTo: 'chart',
       },
     },
     responsive: {
@@ -114,7 +142,7 @@ export class AirMeasurementComponent implements OnInit {
       }]
     },
     title: {
-      text: 'PM10'
+
     },
     navigation: {
       menuItemStyle: {

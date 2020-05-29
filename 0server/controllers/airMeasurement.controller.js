@@ -43,6 +43,31 @@ function toMilisegundos(list_dict){
     console.log(arr)
     return arr
 }
+function toMilisegundosAnual(list_dict){
+    var arr = [];
+    console.log(list_dict);
+    list_dict.forEach(function (json_item) {
+       
+        arr.push(Object.keys(json_item).map(function (key) {
+            if (key == "_id") {
+                year =json_item[key]['year'];
+                //month= json_item[key]['month']-1;
+                //day = json_item[key]['dayOfMonth'];
+               // console.log('UTC');
+                //console.log(Date.UTC(year));
+                return Date.UTC(year);
+               // return Date.UTC(json_item[key]['year'],json_item[key]['month'],json_item[key]['dayOfMonth']);
+                
+            }
+            else {
+             /*    console.log('valor');
+                console.log(json_item[key]); */
+                return json_item[key];}
+        }));
+    });
+    console.log(arr)
+    return arr
+}
 
 airMCtrl.getAirMeasurement = async (req, res, next) => {
     //var aires = await AirMeasurement.findOne({});
@@ -72,7 +97,7 @@ airMCtrl.getAirMeasurement_pm10 = async (req, res, next) => {
         },
         //mongoose group by time series
         { "$sort": { timestampSensor: 1 } }
-    ]).limit(20);
+    ]);//.limit(20);
 
     return res.json(
         {
@@ -117,7 +142,7 @@ airMCtrl.getAirMeasurement_pm10_batchdiario = async (req, res, next) => {
         },
 
         { "$sort": { _id: 1 } }
-    ]).limit(50);//cuidado con el limit , saldrán mas registros poniendo group.
+    ]);//.limit(50);//cuidado con el limit , saldrán mas registros poniendo group.
     
    // return res.json(aires);
           return res.json(
@@ -158,14 +183,14 @@ airMCtrl.getAirMeasurement_pm10_batchanual = async (req, res, next) => {
             }
         },
         { "$sort": { _id: 1 } }
-    ]).limit(500);//cuidado con el limit , saldrán mas registros poniendo group.
-    return res.json(aires);
-    /*     return res.json(
+    ]);//.limit(500);//cuidado con el limit , saldrán mas registros poniendo group.
+  //return res.json(aires);
+        return res.json(
             {
                 "name": idStation,
-                "data": list_dict_to_timeseries_highcharts(aires)
+                "data": toMilisegundosAnual(aires)
             }
-        ); */
+        );  
 };
 
 //imprime _id

@@ -42,6 +42,12 @@ export class AirMeasurementService {
     .do(data => console.log('Prueba datos Batch Diario: '+  JSON.stringify(data)))
     .catch(this.handleError);
   }
+  //router.get('/pm10/batchAnual/:idStation', airM.getAirMeasurement_pm10_batchanual);
+  getPM10_idStation_BatchAnual(idStation: String): Observable<AirMeasurement[]> {
+    return this.http.get<AirMeasurement[]>(this.URL_API + `/pm10/batchAnual/${idStation}`)
+    .do(data => console.log('Prueba datos Batch Anual: '+  JSON.stringify(data)))
+    .catch(this.handleError);
+  }
   private handleError( err : HttpErrorResponse){
     console.log(err.message);
     return Observable.throw(err.message);
