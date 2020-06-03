@@ -1,4 +1,4 @@
-<div fxLayout="row wrap">
+<div fxLayout="row wrap" class="sticky">
   <!-- Primera columna  -->
   <div fxFlex.gt-lg="20" fxFlex.gt-md="20" fxFlex.gt-xs="100" fxFlex="100" fxFlexAlign="center"
     *ngFor="let tile of tiles">
@@ -16,25 +16,10 @@
 
   </div>
 
-  <!--     <button mat-button routerLink="">Animal index</button>
-    <button mat-raised-button color="warn">Warn</button>
-    <button mat-raised-button disabled>Disabled</button>
-    <a mat-raised-button routerLink=".">Link</a>
-    <li><a href="  ">PM10</a></li>
-    <button mat-button (click)="scroll(target)">Click to scroll</button>
-    <mat-card matRipple (click)="scroll(target)">
-        <mat-card-content>
-            <div>
-                <mat-card-title class="text-center">Pru</mat-card-title>
-            </div>
-        </mat-card-content>
-    </mat-card> -->
-
-
 </div>
 
 
-<div id="pm10" class="page-content">
+<div id="pm10" >
 
   <app-air-measurement></app-air-measurement>
 
