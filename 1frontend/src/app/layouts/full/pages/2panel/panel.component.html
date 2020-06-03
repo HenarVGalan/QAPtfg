@@ -1,27 +1,22 @@
-<!-- <script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/series-label.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
- -->
 <div fxLayout="row wrap">
-    <!-- Primera columna  -->
-    <div fxFlex.gt-lg="20" fxFlex.gt-md="20" fxFlex.gt-xs="100" fxFlex="100" fxFlexAlign="center"
-        *ngFor="let tile of tiles">
-        <mat-card matRipple :hover class="mat-card-graphis " [style.background]=tile.color style="text-align: center">
-            <mat-card-content class="last-child">
-                <div>
-                    <mat-card-title class="text-center">{{tile.text}}</mat-card-title>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    <div class="basic-container">
-        <!-- <mat-card (click)="onCardClick($event)" matRipple class="clickable" >A simple mat card</mat-card> -->
+  <!-- Primera columna  -->
+  <div fxFlex.gt-lg="20" fxFlex.gt-md="20" fxFlex.gt-xs="100" fxFlex="100" fxFlexAlign="center"
+    *ngFor="let tile of tiles">
+    <mat-card matRipple :hover class="mat-card-graphis " (click)="onCardClick(tile.id)" [style.background]=tile.color
+      style="text-align: center">
+      <mat-card-content class="last-child">
+        <div>
+          <mat-card-title class="text-center">{{tile.text}}</mat-card-title>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="basic-container">
+    <!-- <mat-card (click)="onCardClick($event)" matRipple class="clickable" >A simple mat card</mat-card> -->
 
-    </div>
+  </div>
 
-    <!--     <button mat-button routerLink="">Animal index</button>
+  <!--     <button mat-button routerLink="">Animal index</button>
     <button mat-raised-button color="warn">Warn</button>
     <button mat-raised-button disabled>Disabled</button>
     <a mat-raised-button routerLink=".">Link</a>
@@ -35,9 +30,19 @@
         </mat-card-content>
     </mat-card> -->
 
+
 </div>
 
 
-<!-- <app-pm10></app-pm10> -->
+<div id="pm10" class="page-content">
 
-<app-air-measurement></app-air-measurement>
+  <app-air-measurement></app-air-measurement>
+
+</div>
+
+
+<div id="o3" class="page-content">
+
+  <app-o3></app-o3>
+
+</div>

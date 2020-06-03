@@ -21,13 +21,10 @@ export interface Tile {
 
 export class PanelComponent implements OnInit{
 
-  public onCardClick(evt: MouseEvent, el: HTMLElement) {
+  public onCardClick(el:any) {
+    var id = document.getElementById(el);
+   id.scrollIntoView({  behavior: "smooth" });
 
-    el.scrollIntoView({ block: "start", behavior: "smooth" });
-
-  }
-  scroll(el: HTMLElement) {
-    el.scrollIntoView({ block: "end", behavior: "smooth" });;
   }
 
   /* BLOQUES */
@@ -52,7 +49,7 @@ $light-megna: #e0f2f4; */
   constructor() { }
 
   ngOnInit() { }
- 
+
 
 }
 
