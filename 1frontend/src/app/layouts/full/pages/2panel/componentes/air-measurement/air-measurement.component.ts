@@ -1,17 +1,16 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { AirMeasurementService } from '../../servicios/air-measurement.service';
 import { AirMeasurement } from '../../modelos/air-measurement';
+import * as $ from 'jquery';
 
-//import * as Highcharts from 'highcharts';
 import * as Highcharts from 'highcharts/highstock';
-//import{Highslide} from '../../../../../../../assets/highslide/src/assets/highslide';
+
+declare const hs: any;
 
 declare var require: any;
 let Boost = require('highcharts/modules/boost');
 let noData = require('highcharts/modules/no-data-to-display');
 let More = require('highcharts/highcharts-more');
-//import ('../../../../../../../assets/highslide/src/assets/highslide/highslide-full.min');
 
 
 Boost(Highcharts);
@@ -22,6 +21,10 @@ noData(Highcharts);
 var limite_bdiario_eea_who = 50;  //µg / m3
 var limite_banual_eea = 40 //µg / m3
 var limite_banual_who = 20 //µg / m3
+
+//var $report = $('#report');
+
+
 
 @Component({
   selector: 'app-air-measurement',
@@ -35,21 +38,22 @@ export class AirMeasurementComponent implements OnInit {
   seriesBatchDiario: any = [];
   seriesBatchAnual: any = [];
 
-  constructor(public airMeasurementService: AirMeasurementService, public dialog: MatDialog) { }
+
+  constructor(public airMeasurementService: AirMeasurementService) { }
 
   ngOnInit() {
     this.init_graph()
   }
 
   async init_graph() {
-
-     await this.getAirMeasurement("Barrax");
-     await this.getAirMeasurement("Gobierno");
-     await this.getAirMeasurement("Poligono");
-     await this.getAirMeasurement("Educacion")
-     await this.getAirMeasurement("Universidad")
-
-     await this.getBatchDiario("Barrax");
+    /*
+         await this.getAirMeasurement("Barrax");
+         await this.getAirMeasurement("Gobierno");
+         await this.getAirMeasurement("Poligono");
+         await this.getAirMeasurement("Educacion")
+         await this.getAirMeasurement("Universidad")
+     */
+    await this.getBatchDiario("Barrax");
     await this.getBatchDiario("Gobierno");
     await this.getBatchDiario("Poligono");
     await this.getBatchDiario("Educacion");
@@ -71,7 +75,7 @@ export class AirMeasurementComponent implements OnInit {
         this.series.push(res);
         this.options.series = this.series;
         this.options.navigator.series = this.series;
-        this.options.title='normal';
+        this.options.title.text = 'normal';
         // Highcharts.seriesTypes.line.prototype.drawLegendSymbol
         Highcharts.stockChart('container', this.options);
         //Highcharts.chart('container', this.options);
@@ -86,9 +90,9 @@ export class AirMeasurementComponent implements OnInit {
         this.airMeasurementService.airMs = res as AirMeasurement[];
         this.seriesBatchDiario.push(res);
         this.options.series = this.seriesBatchDiario;
+        this.options.navigator.enabled = true;
         this.options.navigator.series = this.seriesBatchDiario;
-        //Highcharts.chart('container', this.options);
-        this.options.title='Batch Diario';
+        this.options.title.text = 'PM10 Batch Diario';
         Highcharts.stockChart('containerBatchDiario', this.options);
       });
   }
@@ -99,12 +103,13 @@ export class AirMeasurementComponent implements OnInit {
         this.airMeasurementService.airMs = res as AirMeasurement[];
         this.seriesBatchAnual.push(res);
         this.options.series = this.seriesBatchAnual;
-        this.options.navigator.series = this.seriesBatchAnual;
-        this.options.title='Batch Anual';
+        this.options.title.text = 'PM10 Batch Anual';
+        this.options.navigator.enabled = false;
         Highcharts.stockChart('containerBatchAnual', this.options);
       });
   }
   public options: any = {
+
     chart: {
       zoomType: 'xy',
       panning: true,
@@ -142,7 +147,7 @@ export class AirMeasurementComponent implements OnInit {
       }]
     },
     title: {
-
+      text: ''
     },
     navigation: {
       menuItemStyle: {
@@ -155,7 +160,6 @@ export class AirMeasurementComponent implements OnInit {
         color: 'black'
       }
     },
-
     navigator: {
       series: []
     },
@@ -196,33 +200,23 @@ export class AirMeasurementComponent implements OnInit {
         point: {
           events: {
             click: function (e) {
-
-              /* this.dialog.openDialog(DialogPointgraphicComponent, {
+              hs.htmlExpand(null, {
                 pageOrigin: {
                   x: e.pageX || e.clientX,
                   y: e.pageY || e.clientY
                 },
-                headingText: this.series.name,
-                maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
-                  this.y + ' sessions',
+                headingText: this.series.name + ' ' +  this.title,
+                //%H:%M:%S.%L
+                maincontentText: Highcharts.dateFormat('%A %e, %b', this.x) + '<br/>PM10: ' +
+                  this.y + ' µg/m3',
                 width: 200
-              }) */
-              /*htmlExpand(null, {
-                pageOrigin: {
-                  x: e.pageX || e.clientX,
-                  y: e.pageY || e.clientY
-                },
-                headingText: this.series.name,
-                maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
-                  this.y + ' sessions',
-                width: 200
-              })*/
+              })
             }
           }
         },
         marker: {
-          enabledThreshold: 10,
           enabled: true,
+          enabledThreshold: 5,
           width: 16,
           height: 16,
           //fillColor: 'red',
@@ -256,7 +250,7 @@ export class AirMeasurementComponent implements OnInit {
         y: 20,
         staggerLines: 2,
         formatter: function () {
-          return Highcharts.dateFormat('%H:%M:%S <br/> %e %b %Y', this.value);
+          return Highcharts.dateFormat('%e %b %Y', this.value);
         }
       },
     },
@@ -278,7 +272,7 @@ export class AirMeasurementComponent implements OnInit {
       {
         color: '#f1805e31',
         from: 50,
-        to: 125,
+        to: 1500,
       }],
       plotLines: [
         {
@@ -316,17 +310,4 @@ export class AirMeasurementComponent implements OnInit {
 
   }
 }
-@Component({
-  selector: 'app-dialog-overview-example-dialog',
-  template: ``
-})
-export class DialogPointgraphicComponent {
-  constructor(
-    public dialogRef: MatDialogRef<DialogPointgraphicComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-}

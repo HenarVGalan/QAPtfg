@@ -1,3 +1,7 @@
+<script src="https://www.highcharts.com/media/com_demo/js/highslide-full.min.js"></script>
+<script src="https://www.highcharts.com/media/com_demo/js/highslide.config.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="https://www.highcharts.com/media/com_demo/css/highslide.css" />
+
 <div fxLayout="row wrap">
   <div fxFlex.gt-sm="100%" fxFlex="100" fxFlex="100">
 
@@ -8,6 +12,8 @@
           <mat-card-subtitle _ngcontent-lxd-c255="" class="mat-card-subtitle"></mat-card-subtitle>
         </div>
       </mat-card-header>
+    </mat-card>
+    <!--
       <mat-card>
         <mat-card-content class="mat-card-content">
           <figure class="highcharts-figure">
@@ -17,30 +23,32 @@
           </figure>
 
         </mat-card-content>
-      </mat-card>
+      </mat-card> -->
 
-      <mat-card>
-        <mat-card-content class="mat-card-content">
+    <mat-card>
+      <mat-card-content class="mat-card-content">
 
-          <figure class="highcharts-figure">
-            <div id="containerBatchDiario"></div>
-            <p class="highcharts-description">
-            </p>
-          </figure>
+        <figure class="highcharts-figure">
+          <div id="containerBatchDiario"></div>
+          <p class="highcharts-description">
+          </p>
+        </figure>
 
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card>
-        <mat-card-content class="mat-card-content">
-          <figure class="highcharts-figure">
-            <div id="containerBatchAnual"></div>
-            <p class="highcharts-description">
-            </p>
-          </figure>
-        </mat-card-content>
-      </mat-card>
-
+      </mat-card-content>
     </mat-card>
+
+    <mat-card>
+      <mat-card-content class="mat-card-content">
+        <figure class="highcharts-figure">
+          <div id="containerBatchAnual"></div>
+          <p class="highcharts-description">
+          </p>
+        </figure>
+      </mat-card-content>
+    </mat-card>
+
+    <div id="report"></div>
+
+
   </div>
 </div>

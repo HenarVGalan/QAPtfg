@@ -1,9 +1,16 @@
-#container {
-  min-height: 500px;
-  min-width: 300px;
+#container, #containerBatchDiario{
+  min-height: 700px;
+  min-width: 700px;
   max-width: 900px;
   margin: 0 auto;
 }
+#containerBatchAnual{
+  min-height: 500px;
+  min-width: 500px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 
 
 /* .highcharts-figure, .highcharts-data-table table {

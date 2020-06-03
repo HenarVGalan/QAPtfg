@@ -24,9 +24,13 @@
             "styles": [
               "node_modules/chartist/dist/chartist.css",
               "src/styles.css",
-              "src/assets/styles/style.scss"
+              "src/assets/styles/style.scss",
+              "src/assets/highslide/highslide.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/highslide/highslide-full.min.js",
+              "src/assets/highslide/highslide.config.js"
+            ]
           },
           "configurations": {
             "production": {
