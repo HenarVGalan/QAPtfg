@@ -18,63 +18,47 @@ function list_dict_to_timeseries_highcharts(list_dict) {
     console.log(arr)
     return arr
 }
-function toMilisegundos(list_dict){
+function toMilisegundos(list_dict) {
     var arr = [];
     console.log(list_dict);
     list_dict.forEach(function (json_item) {
-       
+
         arr.push(Object.keys(json_item).map(function (key) {
             if (key == "_id") {
-                year =json_item[key]['year'],
-                month= json_item[key]['month']-1;
+                year = json_item[key]['year'],
+                month = json_item[key]['month'] - 1;
                 day = json_item[key]['dayOfMonth'];
-                console.log('UTC');
-                console.log(Date.UTC(year,month, day));
-                return Date.UTC(year,month, day);
-               // return Date.UTC(json_item[key]['year'],json_item[key]['month'],json_item[key]['dayOfMonth']);
-                
+                return Date.UTC(year, month, day);
             }
-            else {
-                console.log('valor');
-                console.log(json_item[key]);
-                return json_item[key];}
+            else return json_item[key];
+            
         }));
     });
     console.log(arr)
     return arr
 }
-function toMilisegundosAnual(list_dict){
+function toMilisegundosAnual(list_dict) {
     var arr = [];
     console.log(list_dict);
     list_dict.forEach(function (json_item) {
-       
+
         arr.push(Object.keys(json_item).map(function (key) {
             if (key == "_id") {
-                year =json_item[key]['year'];
-                //month= json_item[key]['month']-1;
-                //day = json_item[key]['dayOfMonth'];
-               // console.log('UTC');
-                //console.log(Date.UTC(year));
+                year = json_item[key]['year'];
                 return Date.UTC(year);
-               // return Date.UTC(json_item[key]['year'],json_item[key]['month'],json_item[key]['dayOfMonth']);
-                
             }
             else {
-             /*    console.log('valor');
-                console.log(json_item[key]); */
-                return json_item[key];}
+                return json_item[key];
+            }
         }));
     });
     console.log(arr)
     return arr
 }
 
-airMCtrl.getAirMeasurement = async (req, res, next) => {
-    //var aires = await AirMeasurement.findOne({});
-    //Solo los 10 últimos registros
+airMCtrl.getAirMeasurement = async (req, res, next) => { 
     const aires = await AirMeasurement.find().sort({ _id: -1 }).limit(50);
     res.json(aires);
-
 };
 
 //router.get('/pm10/:idStation', airM.getAirMeasurement_pm10);timestampSensor
@@ -122,7 +106,7 @@ airMCtrl.getAirMeasurement_pm10_batchdiario = async (req, res, next) => {
         },
         {
             "$project": {
-                _id: 1, pm10: 1, avgPM10: 1, 
+                _id: 1, pm10: 1, avgPM10: 1,
                 "year": { "$year": "$timestamp" },
                 "month": { "$month": "$timestamp" },
                 "dayOfMonth": { "$dayOfMonth": "$timestamp" }
@@ -136,21 +120,21 @@ airMCtrl.getAirMeasurement_pm10_batchdiario = async (req, res, next) => {
                     "dayOfMonth": "$dayOfMonth"
                 },
                 avgPM10: { $avg: "$pm10" },
-               // max:{$max : "$pm10"} recuerda añadir a project
+                // max:{$max : "$pm10"} recuerda añadir a project
 
             }
         },
 
         { "$sort": { _id: 1 } }
     ]);//.limit(50);//cuidado con el limit , saldrán mas registros poniendo group.
-    
-   // return res.json(aires);
-          return res.json(
-            {
-                "name": idStation,
-                "data": toMilisegundos(aires)
-            }
-        );  
+
+    // return res.json(aires);
+    return res.json(
+        {
+            "name": idStation,
+            "data": toMilisegundos(aires)
+        }
+    );
 };
 
 airMCtrl.getAirMeasurement_pm10_batchanual = async (req, res, next) => {
@@ -184,13 +168,13 @@ airMCtrl.getAirMeasurement_pm10_batchanual = async (req, res, next) => {
         },
         { "$sort": { _id: 1 } }
     ]);//.limit(500);//cuidado con el limit , saldrán mas registros poniendo group.
-  //return res.json(aires);
-        return res.json(
-            {
-                "name": idStation,
-                "data": toMilisegundosAnual(aires)
-            }
-        );  
+    //return res.json(aires);
+    return res.json(
+        {
+            "name": idStation,
+            "data": toMilisegundosAnual(aires)
+        }
+    );
 };
 
 //imprime _id

@@ -41,20 +41,24 @@ import { PanelComponent } from '../layouts/full/pages/2panel/panel.component';
 import { PM10Component } from '../layouts/full/pages/2panel/componentes/pm10/pm10.component';
 import { AirMeasurementComponent } from '../layouts/full/pages/2panel/componentes/air-measurement/air-measurement.component';
 import { AirMeasurementService } from '../layouts/full/pages/2panel/servicios/air-measurement.service'
+import { O3Component } from '../layouts/full/pages/2panel/componentes/o3/o3.component';
+import { O3Service } from '../layouts/full/pages/2panel/servicios/o3.service'
+
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(MaterialRoutes),
     DemoMaterialModule,
-    HttpClientModule,    
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     CdkTableModule
   ],
   providers: [
-    AirMeasurementService
+    AirMeasurementService,
+    O3Service
   ],
   entryComponents: [DialogOverviewExampleDialogComponent],
   declarations: [
@@ -63,6 +67,7 @@ import { AirMeasurementService } from '../layouts/full/pages/2panel/servicios/ai
     PanelComponent,
     PM10Component,
     AirMeasurementComponent,
+    O3Component,
     ConsultaComponent,
     ButtonsComponent,
     GridComponent,
