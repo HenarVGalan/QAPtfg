@@ -10,7 +10,11 @@ div.sticky {
   position: sticky;
   top: 0;
   z-index:1;
-  padding: 10 px;
+
+}
+#pm10, #o3 {
+  padding-top: 130px;
+  margin-top: -130px;
 
 }
 
