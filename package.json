@@ -68,7 +68,7 @@
     "process-nextick-args": "^2.0.1",
     "proxy-addr": "^2.0.6",
     "pupa": "^2.0.1",
-    "qs": "^6.7.0",
+    "qs": "^6.7.3",
     "range-parser": "^1.2.1",
     "rc": "^1.2.8",
     "readdirp": "^3.4.0",
