@@ -15,7 +15,7 @@
     "debug": "^2.6.9",
     "decompress-response": "^3.3.0",
     "dot-prop": "^5.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "fill-range": "^7.0.1",
     "glob-parent": "^5.1.1",
     "global-dirs": "^2.0.1",
